@@ -14,8 +14,14 @@
         <h3>Tag : <%= product.tag %> </h3>
         <h3>Base Price :<%= product.baseprice %></h3>
         <h3>Owner : <%= product.owner.username %> </h3>
+
         <img src="data:image/<%= product.image.contentType %>;base64, 
 		<%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image"> 
+        <h2>Auction History</h2>
+        <% for(let i = 0 ;i<product.biders.length ; i++) { %>
+          <h3><%= product.biders[i].username %> : <%= product.price[i] %>  </h3> 
+
+         <% } %>    
         <a href = "/login">Login</a>
         <a href = "/register">Register</a>
         <a href = "/newproduct">Add Product</a>

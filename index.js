@@ -223,7 +223,7 @@ app.post('/newproduct' ,upload.single('image'), CheckAuth , async(req,res)=>{
    
 })
 app.get('/productdetails/:id' , CheckAuth , async(req,res)=>{
-    let product = await Product.findById(req.params.id).populate('owner');
+    let product = await Product.findById(req.params.id).populate('owner').populate('biders');
     res.render('productdetails' ,{product})
 })
 app.put('/product/:id', async (req, res) =>{
@@ -278,7 +278,7 @@ app.get('/home'  , async(req,res)=>{
 app.get('/dashboard' ,async(req,res)=>{
     const user = await User.findById(req.session.user_id)
   
-    const products = await Product.find({}).populate('owner')
+    const products = await Product.find({}).populate('owner').populate('biders')
     console.log(t)
     if(t === 'seller'){
         res.render('seller-dashboard' , {user:user , products})

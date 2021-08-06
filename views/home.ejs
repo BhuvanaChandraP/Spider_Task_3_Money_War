@@ -17,7 +17,7 @@
         <% var deadlineDate = new Date(product.end) %> 
         <% var startDate = new Date(product.start) %> 
         <% var now = Date.now() %> 
-        <%= product %> 
+        
         <h1>Name : <%= product.productname %> </h1>
         <h3>Description : <%= product.description %> </h3>
         <h3>Tag : <%= product.tag %> </h3>
@@ -25,9 +25,12 @@
         <h3>Owner : <%= product.owner.username %> </h3>
         <h3>Auction Start Time : <%= product.start %> </h3>
         <h3>Auction End Time : <%= product.end %> </h3>
+        <% if(product.price.length !== 0) {%> 
+          <h3>Highest Bid : <%= product.price[product.price.length -1] %> &nbsp &nbsp &nbsp Bidder :<%= product.biders[product.biders.length -1].username %> </h3>
+        <% } %> 
         <img src="data:image/<%= product.image.contentType %>;base64, 
 		<%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image"> 
-        <a href = "/productdetails/<%= product._id %>">Details</a>
+       
         <% if(deadlineDate >= now && startDate <= now) {%> 
             <a href = "/bid/<%= product._id %>">Bid Here</a>
         <% } %> 

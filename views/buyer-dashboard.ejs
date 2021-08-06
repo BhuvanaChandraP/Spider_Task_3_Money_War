@@ -8,5 +8,27 @@
 </head>
 <body>
     <h1>hi hello</h1>
+    <h1>Products You bid for : </h1>
+    <% let flg = 0 %> 
+    <%= user %><br><br>
+    <% for (let product of products){ %> 
+        <% for(let i =0;i<product.biders.length;i++){ %> 
+        <%if(product.biders[i].username == user.username) { %>  
+            <% if(flg === 0){ %> 
+            <h1>Name : <%= product.productname %> </h1>
+            <h3>Description : <%= product.description %> </h3>
+            <h3>Tag : <%= product.tag %> </h3>
+            <h3>Base Price :<%= product.baseprice %></h3>
+            <h3>Owner : <%= product.owner.username %> </h3>
+            <img src="data:image/<%= product.image.contentType %>;base64, 
+            <%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image"> 
+            <h3>Your Bidding</h3>
+            <% } %> 
+            <%= product.price[i] %> <br>
+            <% flg = 1 %> 
+        <% } %> 
+    <% } %> 
+    <% flg = 0 %> 
+    <% } %> 
 </body>
 </html>
