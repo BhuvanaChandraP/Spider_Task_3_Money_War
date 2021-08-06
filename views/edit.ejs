@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+</head>
+<body>
+    <h1>Name : <%= product.productname %> </h1>
+    <form action="/product/<%= product.id %>?_method=PUT" method="POST" >
+        <!-- <div >
+            <label for="productname"> Product Name </label>
+            <input  type="text" name="productname"  id="name" placeholder="Enter item name"  required />
+                  
+        </div> -->
+        
+        <div>
+            <label for="description">Description </label>
+            <textarea name="description" id="description"  placeholder="<%= product.description %>"   value = "<%= product.description %>"  required  ></textarea>
+ 
+        </div>
+        <div >
+            <label for="tag"> Product Category </label>
+            <select  id="productcategory" name="tag">
+                <option value="<%= product.tag %>"> <%= product.tag %> </option>
+                <option value="Statues"> Statues </option>
+                <option value="Coins"> Coins </option>
+                <option value="Paintings"> Paintings </option>
+                <option value="Ornaments"> Ornaments </option>
+                <option value="Tools"> Tools </option>
+                <option value="Other Products"> Other products </option>
+            </select>
+        </div>
+        <div >
+            <label for="baseprice"> Base Price</label>
+            <input  type="number" name="baseprice"  id="baseprice" placeholder = "<%= product.baseprice %>" value="<%= product.baseprice %>" required />
+                  
+        </div>
+        <!-- <div >
+            
+            
+                <label for="image"> Image </label>
+                <input type="file" class="custom-file-input" id="customFile" name="image" required>
+               
+            
+        </div> -->
+
+        <button>Submit</button>
+    </form>
+    <img src="data:image/<%= product.image.contentType %>;base64, 
+		<%= product.image.data.toString('base64') %>" width="200" height="200" alt="Image"> 
+</body>
+</html>

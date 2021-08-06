@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product</title>
+</head>
+<body>
+    <form action="/newproduct" method="POST" enctype="multipart/form-data">
+        <div >
+            <label for="productname"> Product Name </label>
+            <input  type="text" name="productname"  id="name" placeholder="Enter item name"  required />
+                  
+        </div>
+        
+        <div>
+            <label for="description">Description </label>
+            <textarea name="description" id="description"  placeholder="Description" required   ></textarea>
+ 
+        </div>
+        <div >
+            <label for="tag"> Product Category </label>
+            <select  id="productcategory" name="tag">
+               
+                <option value="Statues"> Statues </option>
+                <option value="Coins"> Coins </option>
+                <option value="Paintings"> Paintings </option>
+                <option value="Ornaments"> Ornaments </option>
+                <option value="Tools"> Tools </option>
+                <option value="Other Products"> Other products </option>
+            </select>
+        </div>
+        <div >
+            <label for="baseprice"> Base Price</label>
+            <input  type="number" name="baseprice"  id="baseprice" placeholder = "Base Price"  required />
+                  
+        </div>
+        <div >
+            
+            
+                <label for="image"> Image </label>
+                <input type="file" class="custom-file-input" id="customFile" name="image" required>
+               
+            
+        </div>
+
+        <button>Submit</button>
+    </form>
+</body>
+</html>

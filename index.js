@@ -1,11 +1,17 @@
 const express = require('express');
 const app = express();
 const User = require('./models/user');
+const Product = require('./models/product');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
 const flash = require('connect-flash');
+const path = require('path');
+const multer = require('multer');
+const methodOverride = require('method-override');
 
+var fs = require('fs'); 
+let n ,i;
 
 mongoose.connect('mongodb://localhost:27017/money-war', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
@@ -26,9 +32,12 @@ mongoose.set('useCreateIndex', true);
 
 
 app.set('view engine', 'ejs');
-app.set('views', 'views');
+app.set('views', path.join(__dirname, 'views'))
 
-app.use(express.urlencoded({ extended: true }));
+// app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false}));
+
+app.use(methodOverride('_method'));
 
 const sessionConfig = {
     secret: 'thisshouldbeabettersecret!',
@@ -42,7 +51,7 @@ const sessionConfig = {
 }
 
 app.use(session(sessionConfig))
-// app.use(session({ secret: 'secret' }))
+
 app.use(flash());
 
 app.use((req,res,next)=>{
@@ -57,6 +66,55 @@ const CheckAuth = (req, res, next) => {
     }
     next();
 }
+
+
+
+
+
+
+
+const storage = multer.diskStorage({
+    destination: './public/uploads',
+    filename: function(req, file, callback) {
+        callback(null, file.fieldname + '-' + Date.now() + 
+        path.extname(file.originalname));
+    }
+});
+
+const upload = multer({
+    storage: storage,
+    limits: { fileSize: 1000000 },
+    fileFilter: function(req, file, callback) {
+        checkFileType(file, callback);
+    }
+});
+
+
+function checkFileType(file, callback, req, res) {
+   
+    const filetypes = /jpeg|jpg|png|gif/;
+    const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+    const mimetype = filetypes.test(file.mimetype);
+    if(mimetype && extname) {
+        return callback(null, true);
+    } else {
+        alert('only images')
+        callback("Error: Images only!");
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 app.get('/', (req, res) => {
     res.send('THIS IS THE HOME PAGE')
@@ -96,10 +154,11 @@ app.get('/login', (req, res) => {
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     const foundUser = await User.findAndValidate(username, password);
+     n = foundUser.username;
+     i = foundUser._id;
+
     if (foundUser) {
         req.session.user_id = foundUser._id;
-        //res.redirect('/');
-        //res.render('secret' ,{user:req.user})
         res.redirect('/secret')
     }
     else {
@@ -107,9 +166,96 @@ app.post('/login', async (req, res) => {
         res.redirect('/login')
     }
 })
-app.get('/secret' , CheckAuth , async(req,res)=>{
+app.get('/newproduct' ,  async(req,res)=>{
+    //const user = await User.findById(req.session.user_id)
     const user = await User.findById(req.session.user_id)
-    res.render('secret' , {user:user})
+    console.log(i)
+    // console.log(req.user)
+    res.render('newproduct' )
+})
+
+app.post('/newproduct' ,upload.single('image'), async(req,res)=>{
+
+    //console.log(req.session.user_id)
+    const user = await User.findById(req.session.user_id)
+    console.log(i)
+    var newProduct = { 
+		productname: req.body.productname, 
+        description: req.body.description,
+        tag:req.body.tag,
+        owner:i,
+        baseprice:req.body.baseprice,
+		image: { 
+			data: fs.readFileSync(path.join('./public/uploads/' + req.file.filename)), 
+			contentType: 'image/png'
+		} 
+	} 
+    
+    Product.create(newProduct, function(err) {
+        if(err) {
+            console.log(err);
+            req.flash('error_msg', 'Images only!');
+            res.render('/secret', {
+                            productname,
+                            description,
+                            image
+                        });
+        } else {
+            req.flash('success', 'Product added successfully!');
+            res.redirect('/secret');
+        }
+    })
+
+
+   
+})
+
+app.put('/product/:id', async (req, res) =>{
+    let product = await Product.findById(req.params.id);
+    let description1= { description : req.body.description}
+    let baseprice1 = {baseprice : req.body.baseprice};
+    let  tag1 = {tag:req.body.tag};
+   
+    try {
+        product = await Product.findOneAndUpdate( {_id : req.params.id} , tag1 , {
+            new: true
+        });
+        await product.save() ;
+        product = await Product.findOneAndUpdate( {_id : req.params.id} , description1 , {
+            new: true
+        });
+        await product.save() ;
+        product = await Product.findOneAndUpdate( {_id : req.params.id} , baseprice1, {
+            new: true
+        });
+        await product.save() ;
+        console.log(product);
+        //product = await product.save();
+        req.flash('success', ' Update successfully ');
+        res.redirect('/secret');
+    }
+    catch (err) {
+        console.log(err);
+        req.flash('error_msg', 'Please fill all the details!');
+        res.render('edit', { product: product });  
+    }
+});
+app.delete('/product/:id', async (req, res) => {
+    await Product.findByIdAndDelete(req.params.id);
+    req.flash('error', 'The product has been removed');
+    res.redirect('/secret');
+});
+app.get('/product/:id', async  (req, res) => {
+    const product = await Product.findById(req.params.id);
+    res.render('edit', {  product: product });
+   
+});
+app.get('/secret'  , async(req,res)=>{
+    const user = await User.findById(req.session.user_id)
+  
+    const products = await Product.find({}).populate('owner')
+  
+    res.render('secret' , {user:user , products})
 })
 
 app.listen(8080, () => {
