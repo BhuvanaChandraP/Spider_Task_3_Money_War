@@ -9,15 +9,10 @@
 <body>
     <h1>Name : <%= product.productname %> </h1>
     <form action="/product/<%= product.id %>?_method=PUT" method="POST" >
-        <!-- <div >
-            <label for="productname"> Product Name </label>
-            <input  type="text" name="productname"  id="name" placeholder="Enter item name"  required />
-                  
-        </div> -->
-        
+       
         <div>
             <label for="description">Description </label>
-            <textarea name="description" id="description"  placeholder="<%= product.description %>"   value = "<%= product.description %>"  required  ></textarea>
+            <textarea name="description" id="description"  placeholder="<%= product.description %>"  rows="4" cols="40"  required  > <%= product.description %> </textarea>
  
         </div>
         <div >
@@ -50,5 +45,8 @@
     </form>
     <img src="data:image/<%= product.image.contentType %>;base64, 
 		<%= product.image.data.toString('base64') %>" width="200" height="200" alt="Image"> 
+
+
+    
 </body>
 </html>

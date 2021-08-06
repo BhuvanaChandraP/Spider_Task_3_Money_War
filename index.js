@@ -11,7 +11,7 @@ const multer = require('multer');
 const methodOverride = require('method-override');
 
 var fs = require('fs'); 
-let n ,i;
+let n ,i ,t;
 
 mongoose.connect('mongodb://localhost:27017/money-war', { useNewUrlParser: true, useUnifiedTopology: true })
     .then(() => {
@@ -156,17 +156,22 @@ app.post('/login', async (req, res) => {
     const foundUser = await User.findAndValidate(username, password);
      n = foundUser.username;
      i = foundUser._id;
-
+     t = foundUser.type;
     if (foundUser) {
         req.session.user_id = foundUser._id;
-        res.redirect('/secret')
+        res.redirect('/home')
     }
     else {
         req.flash("error", " Invalid User Name or Password");
         res.redirect('/login')
     }
 })
-app.get('/newproduct' ,  async(req,res)=>{
+app.get('/newproduct' , CheckAuth , async(req,res)=>{
+    if(t !== "seller")
+    {
+        //alert("You are not a seller");
+        res.redirect('/dashboard')
+    }
     //const user = await User.findById(req.session.user_id)
     const user = await User.findById(req.session.user_id)
     console.log(i)
@@ -174,9 +179,15 @@ app.get('/newproduct' ,  async(req,res)=>{
     res.render('newproduct' )
 })
 
-app.post('/newproduct' ,upload.single('image'), async(req,res)=>{
+app.post('/newproduct' ,upload.single('image'), CheckAuth , async(req,res)=>{
 
     //console.log(req.session.user_id)
+    
+    if(t !== "seller")
+    {
+        alert("You are not a seller");
+        res.redirect('/dashboard')
+    }
     const user = await User.findById(req.session.user_id)
     console.log(i)
     var newProduct = { 
@@ -185,6 +196,8 @@ app.post('/newproduct' ,upload.single('image'), async(req,res)=>{
         tag:req.body.tag,
         owner:i,
         baseprice:req.body.baseprice,
+        start : req.body.start,
+        end:req.body.end,
 		image: { 
 			data: fs.readFileSync(path.join('./public/uploads/' + req.file.filename)), 
 			contentType: 'image/png'
@@ -202,14 +215,17 @@ app.post('/newproduct' ,upload.single('image'), async(req,res)=>{
                         });
         } else {
             req.flash('success', 'Product added successfully!');
-            res.redirect('/secret');
+            res.redirect('/dashboard');
         }
     })
 
 
    
 })
-
+app.get('/productdetails/:id' , CheckAuth , async(req,res)=>{
+    let product = await Product.findById(req.params.id).populate('owner');
+    res.render('productdetails' ,{product})
+})
 app.put('/product/:id', async (req, res) =>{
     let product = await Product.findById(req.params.id);
     let description1= { description : req.body.description}
@@ -232,7 +248,7 @@ app.put('/product/:id', async (req, res) =>{
         console.log(product);
         //product = await product.save();
         req.flash('success', ' Update successfully ');
-        res.redirect('/secret');
+        res.redirect('/dashboard');
     }
     catch (err) {
         console.log(err);
@@ -243,19 +259,68 @@ app.put('/product/:id', async (req, res) =>{
 app.delete('/product/:id', async (req, res) => {
     await Product.findByIdAndDelete(req.params.id);
     req.flash('error', 'The product has been removed');
-    res.redirect('/secret');
+    res.redirect('/dashboard');
 });
 app.get('/product/:id', async  (req, res) => {
     const product = await Product.findById(req.params.id);
     res.render('edit', {  product: product });
    
 });
+app.get('/home'  , async(req,res)=>{
+    const user = await User.findById(req.session.user_id)
+  
+    const products = await Product.find({}).populate('owner').populate('biders')
+  
+    res.render('home' , {user:user , products})
+})
+
+
+app.get('/dashboard' ,async(req,res)=>{
+    const user = await User.findById(req.session.user_id)
+  
+    const products = await Product.find({}).populate('owner')
+    console.log(t)
+    if(t === 'seller'){
+        res.render('seller-dashboard' , {user:user , products})
+    }
+    else
+    {
+        res.render('buyer-dashboard' , {user:user , products})
+    }
+
+})
+
+
 app.get('/secret'  , async(req,res)=>{
     const user = await User.findById(req.session.user_id)
   
     const products = await Product.find({}).populate('owner')
   
     res.render('secret' , {user:user , products})
+})
+app.get('/bid/:id' , async(req,res)=>{
+    const user = await User.findById(req.session.user_id)
+  
+    const products = await Product.findById(req.params.id).populate('owner')
+  
+    res.render('bid' ,{user:user , products})
+})
+app.post('/bid/:id' , async(req,res)=>{
+    let filter1 = {_id:req.params.id }
+    const d1 = await Product.findOneAndUpdate( filter1 , { $push: {biders : i} }, {
+        new: true
+    });
+    await d1.save()  
+   
+    const d2 = await Product.findOneAndUpdate( filter1 , { $push : {price:req.body.price} }, { new : true });
+        
+    await d2.save()  
+    const user = await User.findById(req.session.user_id)
+  
+    const products = await Product.findById(req.params.id).populate('owner')
+    console.log(products);
+    res.redirect('/home')
+    //res.render('bid' ,{user:user , products})
 })
 
 app.listen(8080, () => {

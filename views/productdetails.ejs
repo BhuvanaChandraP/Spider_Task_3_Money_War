@@ -4,18 +4,11 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Secret</title>
+    <title>Home</title>
 </head>
 <body>
-    <a href = "/login">Login</a>
-    <a href = "/register">Register</a>
-    <a href = "/newproduct">Add Product</a>
-    <a href = "/home">Home</a>
-    <a href = "/dashboard">Dashboard</a>
-    <h1>Hi</h1>
-    <h1><%= user %></h1>
-    <% products.forEach(function (product) { %>
-        <h1><%= product %> </h1>
+    
+   
         <h1>Name : <%= product.productname %> </h1>
         <h3>Description : <%= product.description %> </h3>
         <h3>Tag : <%= product.tag %> </h3>
@@ -23,11 +16,10 @@
         <h3>Owner : <%= product.owner.username %> </h3>
         <img src="data:image/<%= product.image.contentType %>;base64, 
 		<%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image"> 
-        <form action="/product/<%= product.id %>?_method=DELETE" method="POST" >
-            <button type="submit" class="btn btn-danger btn-lg">Delete</button>
-        </form>
-        <a href="/product/<%= product.id %>">Edit</a>
-    <% }) %>  
-
+        <a href = "/login">Login</a>
+        <a href = "/register">Register</a>
+        <a href = "/newproduct">Add Product</a>
+        <a href = "/home">Home</a>
+        <a href = "/dashboard">Dashboard</a>
 </body>
 </html>

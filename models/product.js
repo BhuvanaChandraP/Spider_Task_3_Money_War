@@ -27,10 +27,17 @@ const ProductSchema = new mongoose.Schema({
     price:{
         type:[Number]
     },
+    start:{
+        type:Date
+    },
+    end:{
+        type:Date
+    },
     image: {
         data: Buffer, 
 		contentType: String 
     }
+   
    
 });
 
