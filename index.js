@@ -323,6 +323,12 @@ app.post('/bid/:id' , async(req,res)=>{
     //res.render('bid' ,{user:user , products})
 })
 
+app.get('/logout',(req,res)=>{
+    //req.logout();
+    req.flash('success',"Successfully Logged Out");
+    res.redirect('/login');
+})
+
 app.listen(8080, () => {
     console.log("Serving on port 8080")
 })
