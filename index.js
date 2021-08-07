@@ -271,7 +271,7 @@ app.get('/home'  , async(req,res)=>{
   
     const products = await Product.find({}).populate('owner').populate('biders')
   
-    res.render('home' , {user:user , products})
+    res.render('home' , {user:user , products , flg : "1"})
 })
 
 
@@ -322,7 +322,28 @@ app.post('/bid/:id' , async(req,res)=>{
     res.redirect('/home')
     //res.render('bid' ,{user:user , products})
 })
+app.get('/search', async (req, res) =>{
+    res.redirect('/home');
+});
 
+//Case insensitive search using regular expression
+app.post('/search', async (req, res) => {
+    const user = await User.findById(req.session.user_id)
+    const { search } = req.body;
+    console.log(search);
+    let products ;
+    let products1 ;
+   
+    products = await Product.find( { productname: new RegExp(search, 'i') } ).populate('owner');
+    //console.log(products);
+       
+    products1  = await Product.find({ tag : new RegExp(search, 'i') }).populate('owner') ;   
+    console.log(products);   
+   
+    res.render('home' , {user , products : products , products1 : products1 , flg : "0"})     //, products1 : products1 
+
+
+});
 app.get('/logout',(req,res)=>{
     //req.logout();
     req.flash('success',"Successfully Logged Out");
