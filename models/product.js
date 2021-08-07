@@ -33,6 +33,10 @@ const ProductSchema = new mongoose.Schema({
     end:{
         type:Date
     },
+    review:{
+        type:[mongoose.Schema.Types.ObjectId],
+        ref:'Comment'
+    },
     image: {
         data: Buffer, 
 		contentType: String 

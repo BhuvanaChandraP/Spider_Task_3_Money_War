@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const User = require('./models/user');
 const Product = require('./models/product');
+const Comment = require('./models/comment');
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const session = require('express-session');
@@ -224,8 +225,27 @@ app.post('/newproduct' ,upload.single('image'), CheckAuth , async(req,res)=>{
 })
 app.get('/productdetails/:id' , CheckAuth , async(req,res)=>{
     let product = await Product.findById(req.params.id).populate('owner').populate('biders');
-    res.render('productdetails' ,{product})
+    let comments = await Comment.find({product : req.params.id}).populate('ownedBy').populate('product')
+    const user = await User.findById(req.session.user_id)
+    //comments = Comment.find({});
+    res.render('productdetails' ,{product ,comments ,user })
 })
+app.post('/productdetails/:id' , CheckAuth , async(req,res)=>{
+    const { rating , comment } = req.body;
+    const comment1 = new Comment({ rating , comment , ownedBy: i ,product : req.params.id});
+    await comment1.save();
+    // comment1.save();
+    let product = await Product.findById(req.params.id).populate('owner').populate('biders').populate('review');
+    let comments = await Comment.find({product : req.params.id}).populate('ownedBy').populate('product')
+    const user = await User.findById(req.session.user_id)
+    //comments = Comment.find({});
+    //res.send("able to add")
+    res.render('productdetails' ,{product , comments , user})
+})
+app.delete('/productdetails/:id', async (req, res) => {
+    await Comment.findOneAndDelete({product : req.params.id});
+    res.redirect(`/productdetails/${req.params.id}`);
+});
 app.put('/product/:id', async (req, res) =>{
     let product = await Product.findById(req.params.id);
     let description1= { description : req.body.description}
