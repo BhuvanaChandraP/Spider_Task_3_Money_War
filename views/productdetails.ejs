@@ -7,7 +7,7 @@
     <title>Home</title>
     <style>
         .star-rating {
-        border:solid 1px #ccc;
+        /* border:solid 1px #ccc; */
         display:flex;
         flex-direction: row-reverse;
         font-size:1.5em;
@@ -96,6 +96,7 @@
                 <form action="/productdetails/<%= product.id %>?_method=DELETE" method="POST" >
                     <button type="submit" class="btn btn-danger btn-lg">Delete</button>
                 </form>
+                <a href="/updatedetails/<%= comments[i].id %>">Edit</a>
             <% } %> 
           <% } %>
 

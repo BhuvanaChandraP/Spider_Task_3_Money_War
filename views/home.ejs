@@ -55,6 +55,7 @@
         <% } %> 
         <img src="data:image/<%= product.image.contentType %>;base64, 
 		<%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image"> 
+        <a href = "/productdetails/<%= product._id %>">Details</a>
        
         <% if(deadlineDate >= now && startDate <= now) {%> 
             <a href = "/bid/<%= product._id %>">Bid Here</a>
@@ -83,6 +84,7 @@
         <% } %> 
         <img src="data:image/<%= product.image.contentType %>;base64, 
 		<%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image"> 
+        <a href = "/productdetails/<%= product._id %>">Details</a>
        
         <% if(deadlineDate >= now && startDate <= now) {%> 
             <a href = "/bid/<%= product._id %>">Bid Here</a>

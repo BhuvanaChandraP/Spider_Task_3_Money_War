@@ -223,6 +223,26 @@ app.post('/newproduct' ,upload.single('image'), CheckAuth , async(req,res)=>{
 
    
 })
+app.get('/updatedetails/:id' , CheckAuth , async(req,res)=>{
+    let comments = await Comment.findOne({_id : req.params.id}).populate('ownedBy').populate('product')
+    res.render('update' ,{comments})
+
+})
+app.post('/updatedetails/:id' , CheckAuth , async(req,res)=>{
+    let comments = await Comment.findOne({_id : req.params.id}).populate('ownedBy').populate('product')
+    let comment2
+    comment2 = await Comment.findOneAndUpdate( {_id : req.params.id} , {rating : req.body.rating} , {
+        new: true
+    });
+    await comment2.save() ;
+    comment2 = await Comment.findOneAndUpdate( {_id : req.params.id} , {comment : req.body.comment} , {
+        new: true
+    });
+    await comment2.save() ;
+    res.redirect(`/productdetails/${comments.product._id}`);
+   // res.render('update' ,{comments})
+
+})
 app.get('/productdetails/:id' , CheckAuth , async(req,res)=>{
     let product = await Product.findById(req.params.id).populate('owner').populate('biders');
     let comments = await Comment.find({product : req.params.id}).populate('ownedBy').populate('product')
@@ -244,6 +264,19 @@ app.post('/productdetails/:id' , CheckAuth , async(req,res)=>{
 })
 app.delete('/productdetails/:id', async (req, res) => {
     await Comment.findOneAndDelete({product : req.params.id});
+    res.redirect(`/productdetails/${req.params.id}`);
+});
+app.put('/productdetails/:id', async (req, res) => {
+    await Comment.findOneAndDelete({product : req.params.id});
+    let comment2
+    comment2 = await Comment.findOneAndUpdate( {product : req.params.id} , {rating : req.body.rating} , {
+        new: true
+    });
+    await comment2.save() ;
+    comment2 = await Comment.findOneAndUpdate( {product : req.params.id} , {comment : req.body.comment} , {
+        new: true
+    });
+    await comment2.save() ;
     res.redirect(`/productdetails/${req.params.id}`);
 });
 app.put('/product/:id', async (req, res) =>{
