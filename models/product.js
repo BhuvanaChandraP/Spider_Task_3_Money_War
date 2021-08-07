@@ -37,6 +37,10 @@ const ProductSchema = new mongoose.Schema({
         type:[mongoose.Schema.Types.ObjectId],
         ref:'Comment'
     },
+    commented:{
+        type:[mongoose.Schema.Types.ObjectId],
+        ref:'User' 
+    },
     image: {
         data: Buffer, 
 		contentType: String 
