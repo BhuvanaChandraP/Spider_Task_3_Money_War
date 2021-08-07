@@ -13,7 +13,19 @@
     <a href = "/home">Home</a>
     <a href = "/dashboard">Dashboard</a>
     <a href = "/logout">Logout</a>
-
+    <form action="/sort" method="POST" >
+        <div >
+            <label for="sort"> Sort By </label>
+            <select  id="category" name="sort">
+            
+                <option value="alpha"> Alphabetical Order </option>
+                <option value="baseprice"> Base Price </option>
+                <option value="bid"> Highest Bid </option>
+                
+            </select>
+        </div>
+        <button>Apply</button>
+    </form>
     <form  action="/search" method="POST">
         <!-- <div >
             <label for="tag"> Product Category </label>
