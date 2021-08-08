@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <style>
-        .star-rating {
-        /* border:solid 1px #ccc; */
+        /* .star-rating {
+        
         display:flex;
         flex-direction: row-reverse;
         font-size:1.5em;
@@ -33,44 +33,192 @@
         .star-rating label:hover,
         .star-rating label:hover ~ label {
         color:#fc0;
+        } */
+        body{
+            text-align: center;
+        }
+        .star-rating {
+        /* border:solid 1px #ccc; */
+        
+        display:flex;
+        flex-direction: row-reverse;
+        font-size:1.5em;
+        font-size:3.5em;
+        /* justify-content:center; */
+        justify-content:space-around;
+        padding:0 .2em;
+        text-align:center;
+        width:5em;
+        margin: auto;
         }
 
-        /* explanation */
+        .star-rating input {
+        display:none;
+        }
 
-        article {
+        .star-rating label {
+        color:rgb(61, 61, 61);
+        cursor:pointer;
+        }
+
+        .star-rating :checked ~ label {
+        color:rgb(251, 226, 5);
+        }
+
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+        color:#fc0;
+        }
+
+       
+        /* article {
         background-color:#ffe;
         box-shadow:0 0 1em 1px rgba(0,0,0,.25);
-        color:#006;
+        color:rgb(5, 5, 212);
         font-family:cursive;
         font-style:italic;
         margin:4em;
         max-width:30em;
         padding:2em;
+        } */
+        form{
+            text-align: center;
+           /* border: brown; */
+           /* border-color: brown; */
         }
+        #com{
+            padding: 7px;
+            border-color: #df019c;
+            color: #f31658;
+            border-radius: 5px;
+            font-size: large;
+        }
+        #com:hover{
+            padding: 12px;
+            background-color: black;
+            border-radius: 5px;
+
+        }
+        textarea{
+            border-color: #ee4c7c;
+            width: 250px;
+            height: 70px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        textarea:hover{
+            border-color: #f31658;
+            width: 350px;
+        }
+        textarea:active{
+            border-color: #f31658;
+            width: 350px;
+        }
+        #contain-product{
+            /* border:solid 2px rgb(219, 19, 19);*/
+            max-width: 400px; 
+            padding-bottom: 20px;
+            border-radius: 5px;
+            margin-left: 50px;
+            /* margin: auto; */
+            float:left;
+            /* float: top; */
+            /* margin-right: 50px; */
+        }
+        #contain-form{
+            border:solid 2px rgb(219, 19, 19);
+            max-width: fit-content;
+            padding-bottom: 20px;
+            border-radius: 5px;
+            /* margin: auto; */
+            margin-top: 60px;
+            margin-right: 50px;
+            float:right;
+            /* float: top; */
+            /* margin-right: 50px; */
+        }
+        #contain-comment{
+            
+            width: 300px;
+            /* max-width: fit-content;  */
+            padding-bottom: 20px;
+            border-radius: 5px;
+            margin: auto;
+            float:center;
+            /* float: top; */
+            /* margin-right: 50px; */
+        }
+        #single-com{
+            border-bottom:solid 2px rgb(59, 59, 59);
+        }
+        #edit{
+            text-decoration: none;
+            color: #f31658;
+            font-size: x-large;
+        }
+        #delete{
+            text-decoration: none;
+            color: #f31658;
+            border :none;
+            font-size: large;
+        }
+        #edit:hover{
+            font-size: xx-large;
+        }
+        #delete:hover{
+            font-size: x-large;
+        }
+        @media(max-width: 1100px) {
+            body{
+                float: none;
+            text-align: center;
+            }
+            #contain-product{
+                float: none;
+                text-align: center;
+            }
+            #contain-form{
+                float: none;
+                text-align: center;
+                margin: auto;
+            }
+            #contain-comment{
+                float: none;
+                text-align: center;
+            }
+        }
+
+       
     </style>
 </head>
 <body>
     <%- include('partials/navbar') %>
     <% let list  = [] %>
-    <% for(let j=0;j<product.commented.length;j++){ %>
-        <% list += product.commented[j].username %>        
-    <% } %>  
-    <%= list %> 
-        <h1>Name : <%= product.productname %> </h1>
-        <h3>Description : <%= product.description %> </h3>
-        <h3>Tag : <%= product.tag %> </h3>
-        <h3>Base Price :<%= product.baseprice %></h3>
-        <h3>Owner : <%= product.owner.username %> </h3>
+    <% if(product.commented !== null){ %> 
+        <% for(let j=0;j<product.commented.length ;j++){ %>
+            <% list += product.commented[j].username %>        
+        <% } %>  
+    <% } %> 
+    <div id = "contain-product">
+            <h1>Name : <%= product.productname %> </h1>
+            
+            
+            <h3>Tag : <%= product.tag %> </h3>
+            <h3>Base Price :<%= product.baseprice %></h3>
+            <h3>Owner : <%= product.owner.username %> </h3>
+            <img src="data:image/<%= product.image.contentType %>;base64, 
+            <%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image"> 
+            <h3>Description : <%= product.description %> </h3>
 
-        <img src="data:image/<%= product.image.contentType %>;base64, 
-		<%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image"> 
-        <% if(product.owner.username == user.username){ %> 
-            <h2>Auction History</h2>
-            <% for(let i = 0 ;i<product.biders.length ; i++) { %>
-            <h3><%= product.biders[i].username %> : <%= product.price[i] %>  </h3> 
+           
+            <% if(product.owner.username == user.username){ %> 
+                <h2>Auction History</h2>
+                <% for(let i = 0 ;i<product.biders.length ; i++) { %>
+                <h3><%= product.biders[i].username %> : <%= product.price[i] %>  </h3> 
 
-            <% } %>
-        <% } %> 
+                <% } %>
+            <% } %> 
+    </div>
             <% if(list.includes(user.username)) {%>
 
 
@@ -78,61 +226,69 @@
              
         
         
-         
-                <form action="/productdetails/<%= product._id %>" method="POST"  >
-                    <div class="star-rating">
-                        <input type="radio" id="5-stars" name="rating" value= 5 />
-                        <label for="5-stars" class="star">&#9733;</label>
-                        <input type="radio" id="4-stars" name="rating" value= 4 />
-                        <label for="4-stars" class="star">&#9733;</label>
-                        <input type="radio" id="3-stars" name="rating" value= 3 />
-                        <label for="3-stars" class="star">&#9733;</label>
-                        <input type="radio" id="2-stars" name="rating" value= 2 />
-                        <label for="2-stars" class="star">&#9733;</label>
-                        <input type="radio" id="1-star" name="rating" value= 1 />
-                        <label for="1-star" class="star">&#9733;</label>
-                    </div>
+                <div id = "contain-form">
+                    <form action="/productdetails/<%= product._id %>" method="POST"  >
+                        <h1 style="color: #e8584f;">Rating  </h1>
+                        <div class="star-rating">
+                            <input type="radio" id="5-stars" name="rating" value= 5 />
+                            <label for="5-stars" class="star">&#9733;</label>
+                            <input type="radio" id="4-stars" name="rating" value= 4 />
+                            <label for="4-stars" class="star">&#9733;</label>
+                            <input type="radio" id="3-stars" name="rating" value= 3 />
+                            <label for="3-stars" class="star">&#9733;</label>
+                            <input type="radio" id="2-stars" name="rating" value= 2 />
+                            <label for="2-stars" class="star">&#9733;</label>
+                            <input type="radio" id="1-star" name="rating" value= 1 />
+                            <label for="1-star" class="star">&#9733;</label><br>
+                        </div>
+                        
+                        <div>
+                            
+                            <label for="comment"><h1 style="color: #e8584f;" >Comment </h1></label><br>
+                            <textarea name="comment" id="comment"  placeholder="comment" required  ></textarea>
+                
+                        </div>
+                        <br><br>
+                        <button id = "com">Add Comment</button>
+                        <% flg = 1 %> 
+                    </form>
+                </div>
+            <% } %> 
+        <div id = "contain-comment">
+            <h1>Comments</h1>
+            <% for(let i = 0 ;i<comments.length ; i++) { %>
+                <div id = "single-com">
+                    <% if (comments[i].rating == 1) { %> 
+                    <h3> Rating </h3><h3 style="color: red;"> &#9733; </h3> 
+                    <% } else if (comments[i].rating == 2){ %> 
+                        <h3> Rating </h3><h3 style="color: rgb(241, 134, 12);"> &#9733 &#9733; </h3>
+                    <% } else if (comments[i].rating == 3){ %> 
+                        <h3> Rating </h3><h3 style="color: rgb(251, 255, 1);">&#9733 &#9733  &#9733; </h3>
+                    <% } else if (comments[i].rating == 4){ %> 
+                        <h3> Rating </h3><h3 style="color: rgb(15, 209, 25);"> &#9733 &#9733  &#9733 &#9733; </h3>
+                    <% } else { %> 
+                        <h3> Rating </h3><h3 style="color: rgb(2, 102, 7);">&#9733 &#9733 &#9733 &#9733 &#9733; </h3>
+                    <% } %> 
+                        
+                        <h3>Comment :</h3> 
+                        <p style="font-weight: light;"><%= comments[i].comment %></p> 
+                        <p>-<%= comments[i].ownedBy.username %> </p>
                     
-                    <div>
-                        <label for="comment">Comment </label>
-                        <textarea name="comment" id="comment"  placeholder="comment" required  ></textarea>
-            
-                    </div>
-                    <button>Add Comment</button>
-                    <% flg = 1 %> 
-                </form>
-            <% } %> 
-        
-        <h1>Comments</h1>
-        <% for(let i = 0 ;i<comments.length ; i++) { %>
-        <% if (comments[i].rating == 1) { %> 
-            <h3 style="color: red;">Rating : &#9733; </h3> 
-        <% } else if (comments[i].rating == 2){ %> 
-            <h3 style="color: rgb(241, 134, 12);">Rating : &#9733 &#9733; </h3>
-        <% } else if (comments[i].rating == 3){ %> 
-            <h3 style="color: rgb(207, 211, 19);">Rating :&#9733 &#9733  &#9733; </h3>
-        <% } else if (comments[i].rating == 4){ %> 
-            <h3 style="color: rgb(139, 243, 129);">Rating : &#9733 &#9733  &#9733 &#9733; </h3>
-        <% } else { %> 
-            <h3 style="color: rgb(14, 230, 24);">Rating :&#9733 &#9733 &#9733 &#9733 &#9733; </h3>
-         <% } %> 
-            
-            <h3>Comment : <%= comments[i].comment %> </h3> 
-            <br>
-            <% if (user.username == comments[i].ownedBy.username){ %> 
-                <form action="/productdetails/<%= product.id %>?_method=DELETE" method="POST" >
-                    <button type="submit" class="btn btn-danger btn-lg">Delete</button>
-                </form>
-                <a href="/updatedetails/<%= comments[i].id %>">Edit</a>
-            <% } %> 
-          <% } %>
-
-        <a href = "/login">Login</a>
+                        <% if (user.username === comments[i].ownedBy.username){ %> 
+                            <form action="/updatedetails/<%= comments[i].id %>/<%= product._id %>?_method=DELETE" method="POST" >
+                                <button type="submit" id = "delete">Delete</button>
+                            </form>
+                            <a href="/updatedetails/<%= comments[i].id %>" id = "edit">Edit</a>
+                        <% } %> 
+                </div>
+            <% } %>
+        </div>
+        <!-- <a href = "/login">Login</a>
         <a href = "/register">Register</a>
         <a href = "/newproduct">Add Product</a>
         <a href = "/home">Home</a>
         <a href = "/dashboard">Dashboard</a>
-        <a href = "/logout">Logout</a>
+        <a href = "/logout">Logout</a> -->
         <%  list  = [] %>
 </body>
 </html>

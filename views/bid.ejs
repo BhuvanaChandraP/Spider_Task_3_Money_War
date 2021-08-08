@@ -9,6 +9,33 @@
         #contain{
             text-align: center;
         }
+        input{
+            border-color: #ee4c7c;
+            width: 200px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        input:hover{
+            border-color: #f31658;
+            width: 250px;
+        }
+        input:active{
+            border-color: #f31658;
+            width: 250px;
+        }
+        button{
+            padding: 7px;
+            border-color: #df019c;
+            color: #f31658;
+            border-radius: 5px;
+            font-size: large;
+        }
+        button:hover{
+            padding: 12px;
+            background-color: black;
+            border-radius: 5px;
+
+        }
     </style>
 </head>
 <body>
@@ -17,11 +44,11 @@
     <% i = products.price.length -1  %>  
     <% j = products.price[i] %> 
     <div id = "contain">
-        <h1>Last Bid : <%= products.price[i] %> </h1>
+        <h1 style="color: #9a1750;">Last Bid : <%= products.price[i] %> </h1>
         
         <form action="/bid/<%= products._id %> " method="POST"  >
             <div >
-                <label for="price"> Your Bid : </label>
+                <label for="price"><h1 style="color: #da099b;"> Your Bid : </h1></label>
                 <% if(products.price.length == 0) {%> 
                 <input  type="number" name="price"  id="price" placeholder = "<%= products.baseprice %>"  min = "<%= products.baseprice %>" required />
                 <% } else { %>    

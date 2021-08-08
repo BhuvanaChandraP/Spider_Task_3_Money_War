@@ -162,7 +162,7 @@ app.get('/newproduct' , CheckAuth , async(req,res)=>{
     }
     
     const user = await User.findById(req.session.user_id)
-    console.log(i)
+    //console.log(i)
     res.render('newproduct' )
 })
 
@@ -229,12 +229,34 @@ app.post('/updatedetails/:id' , CheckAuth , async(req,res)=>{
    // res.render('update' ,{comments})
 
 })
+app.delete('/updatedetails/:id/:proid', CheckAuth ,  async (req, res) => {
+    const com = await Comment.findOneAndDelete({_id : req.params.id});
+    
+    const d2 = await Product.findOneAndUpdate( {commented : { $in :[i]}}, { $pull: {review : req.params.id} }, {
+        new: true
+    });
+    await d2.save()
+    const d1 = await Product.findOneAndUpdate( {commented : { $in :[i]}} , { $pull: {commented : i} }, {
+        new: true
+    });
+    await d1.save() 
+   
+    const user = await User.findById(req.session.user_id)
+    // let product = await Product.find(req.params.id).populate('owner').populate('biders').populate('review').populate('commented');
+    let comments = await Comment.find({ product : req.params.proid}).populate('ownedBy').populate('product')
+    let product = await Product.findById(req.params.proid).populate('owner').populate('biders').populate('review').populate('commented');
+    //console.log(com);
+    console.log(d2);
+    res.render('productdetails' ,{product , comments , user })
+    
+    //res.redirect(`/productdetails/${req.params.id}`);
+});
 
 app.get('/productdetails/:id' , CheckAuth , async(req,res)=>{
     let product = await Product.findById(req.params.id).populate('owner').populate('biders').populate('review').populate('commented');
     let comments = await Comment.find({product : req.params.id}).populate('ownedBy').populate('product')
     const user = await User.findById(req.session.user_id)
-    console.log(product);
+    //console.log(product);
     //comments = Comment.find({});
     res.render('productdetails' ,{product ,comments ,user })
 })
@@ -255,14 +277,28 @@ app.post('/productdetails/:id' , CheckAuth , async(req,res)=>{
     //res.send("able to add")
     res.render('productdetails' ,{product , comments , user })
 })
-app.delete('/productdetails/:id', CheckAuth ,  async (req, res) => {
-    await Comment.findOneAndDelete({product : req.params.id});
-    const d1 = await Product.findOneAndUpdate( {_id : req.params.id} , { $pull: {commented : i} }, {
-        new: true
-    });
-    await d1.save() 
-    res.redirect(`/productdetails/${req.params.id}`);
-});
+// app.delete('/productdetails/:id', CheckAuth ,  async (req, res) => {
+//     const com = await Comment.findOneAndDelete({product : req.params.id});
+//     const d1 = await Product.findOneAndUpdate( {_id : req.params.id} , { $pull: {commented : i} }, {
+//         new: true
+//     });
+//     await d1.save() 
+//     const d2 = await Product.findOneAndUpdate( {_id : req.params.id} , { $pull: {review : req.params.id} }, {
+//         new: true
+//     });
+//     await d2.save()
+//     const user = await User.findById(req.session.user_id)
+//     let product = await Product.findById(req.params.id).populate('owner').populate('biders').populate('review').populate('commented');
+//     let comments = await Comment.find({product : req.params.id}).populate('ownedBy').populate('product')
+//     //console.log(com);
+//     console.log(d1);
+//     res.render('productdetails' ,{product , comments , user })
+    
+//     //res.redirect(`/productdetails/${req.params.id}`);
+// });
+
+
+
 // app.put('/productdetails/:id', async (req, res) => {
 //     await Comment.findOneAndDelete({product : req.params.id});
 //     let comment2

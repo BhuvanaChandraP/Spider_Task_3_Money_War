@@ -8,13 +8,17 @@
     <style>
         .star-rating {
         /* border:solid 1px #ccc; */
+        
         display:flex;
         flex-direction: row-reverse;
         font-size:1.5em;
+        font-size:3.5em;
+        /* justify-content:center; */
         justify-content:space-around;
         padding:0 .2em;
         text-align:center;
         width:5em;
+        margin: auto;
         }
 
         .star-rating input {
@@ -22,12 +26,12 @@
         }
 
         .star-rating label {
-        color:#ccc;
+        color:rgb(61, 61, 61);
         cursor:pointer;
         }
 
         .star-rating :checked ~ label {
-        color:#f90;
+        color:rgb(251, 226, 5);
         }
 
         .star-rating label:hover,
@@ -35,24 +39,57 @@
         color:#fc0;
         }
 
-        /* explanation */
-
-        article {
+       
+        /* article {
         background-color:#ffe;
         box-shadow:0 0 1em 1px rgba(0,0,0,.25);
-        color:#006;
+        color:rgb(5, 5, 212);
         font-family:cursive;
         font-style:italic;
         margin:4em;
         max-width:30em;
         padding:2em;
+        } */
+        form{
+            text-align: center;
+           /* border: brown; */
+           /* border-color: brown; */
+        }
+        button{
+            padding: 7px;
+            border-color: #df019c;
+            color: #f31658;
+            border-radius: 5px;
+            font-size: large;
+        }
+        button:hover{
+            padding: 12px;
+            background-color: black;
+            border-radius: 5px;
+
+        }
+        textarea{
+            border-color: #ee4c7c;
+            width: 250px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        textarea:hover{
+            border-color: #f31658;
+            width: 350px;
+        }
+        textarea:active{
+            border-color: #f31658;
+            width: 350px;
         }
     </style>
 </head>
 <body>
     <%- include('partials/navbar') %>
     <form action="/updatedetails/<%= comments._id %>" method="POST"  >
+        <h1 style="color: #e8584f;">Rating  </h1>
         <div class="star-rating">
+            
             <input type="radio" id="5-stars" name="rating" value= 5 />
             <label for="5-stars" class="star">&#9733;</label>
             <input type="radio" id="4-stars" name="rating" value= 4 />
@@ -62,15 +99,16 @@
             <input type="radio" id="2-stars" name="rating" value= 2 />
             <label for="2-stars" class="star">&#9733;</label>
             <input type="radio" id="1-star" name="rating" value= 1 />
-            <label for="1-star" class="star">&#9733;</label>
+            <label for="1-star" class="star">&#9733;</label><br>
         </div>
           
         <div>
-            <label for="comment">Comment </label>
+            <label for="comment"><h1 style="color: #e8584f;" >Comment </h1></label><br>
             <textarea name="comment" id="comment"placeholder = "<%= comments.comment %>"  rows="4" cols="40"  required><%= comments.comment %></textarea>
  
         </div>
-        <button>Add Comment</button>
+        <br><br>
+        <button>Update Comment</button>
     </form>
 </body>
 </html>
