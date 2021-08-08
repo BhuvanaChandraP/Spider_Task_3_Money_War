@@ -7,6 +7,7 @@
     <title>Add Product</title>
 </head>
 <body>
+    <%- include('partials/navbar') %>
     <h1>Name : <%= product.productname %> </h1>
     <form action="/product/<%= product.id %>?_method=PUT" method="POST" >
        

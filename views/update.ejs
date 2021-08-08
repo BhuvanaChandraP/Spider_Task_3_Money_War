@@ -50,6 +50,7 @@
     </style>
 </head>
 <body>
+    <%- include('partials/navbar') %>
     <form action="/updatedetails/<%= comments._id %>" method="POST"  >
         <div class="star-rating">
             <input type="radio" id="5-stars" name="rating" value= 5 />

@@ -5,22 +5,33 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Auction</title>
+    <style>
+        #contain{
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
+    <%- include('partials/navbar') %>
     <% let i,j %>
     <% i = products.price.length -1  %>  
     <% j = products.price[i] %> 
-    <%= products.price[i] %> 
-    <form action="/bid/<%= products._id %> " method="POST"  >
-        <div >
-            <label for="price"> Price</label>
-            <% if(products.price.length == 0) {%> 
-            <input  type="number" name="price"  id="price" placeholder = "<%= products.baseprice %>"  min = "<%= products.baseprice %>" required />
-             <% } else { %>    
-                <input  type="number" name="price"  id="price" placeholder = "<%= products.price[i] %>"  min = "<%= j %>" required />  
-            <% } %> 
-        </div>
-        <button>Bid</button>
-    </form>
+    <div id = "contain">
+        <h1>Last Bid : <%= products.price[i] %> </h1>
+        
+        <form action="/bid/<%= products._id %> " method="POST"  >
+            <div >
+                <label for="price"> Your Bid : </label>
+                <% if(products.price.length == 0) {%> 
+                <input  type="number" name="price"  id="price" placeholder = "<%= products.baseprice %>"  min = "<%= products.baseprice %>" required />
+                <% } else { %>    
+                    <input  type="number" name="price"  id="price" placeholder = "<%= products.price[i] %>"  min = "<%= j %>" required />  
+                <% } %> 
+            </div>
+            <br>
+            <br>
+            <button>Bid Here</button>
+        </form>
+    </div>
 </body>
 </html>

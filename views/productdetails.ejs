@@ -50,6 +50,7 @@
     </style>
 </head>
 <body>
+    <%- include('partials/navbar') %>
     <% let list  = [] %>
     <% for(let j=0;j<product.commented.length;j++){ %>
         <% list += product.commented[j].username %>        

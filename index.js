@@ -105,18 +105,6 @@ function checkFileType(file, callback, req, res) {
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 app.get('/', (req, res) => {
     res.send('THIS IS THE HOME PAGE')
 })
@@ -169,14 +157,12 @@ app.post('/login', async (req, res) => {
 })
 app.get('/newproduct' , CheckAuth , async(req,res)=>{
     if(t !== "seller")
-    {
-        //alert("You are not a seller");
+    {  
         res.redirect('/dashboard')
     }
-    //const user = await User.findById(req.session.user_id)
+    
     const user = await User.findById(req.session.user_id)
     console.log(i)
-    // console.log(req.user)
     res.render('newproduct' )
 })
 
@@ -271,6 +257,10 @@ app.post('/productdetails/:id' , CheckAuth , async(req,res)=>{
 })
 app.delete('/productdetails/:id', CheckAuth ,  async (req, res) => {
     await Comment.findOneAndDelete({product : req.params.id});
+    const d1 = await Product.findOneAndUpdate( {_id : req.params.id} , { $pull: {commented : i} }, {
+        new: true
+    });
+    await d1.save() 
     res.redirect(`/productdetails/${req.params.id}`);
 });
 // app.put('/productdetails/:id', async (req, res) => {
@@ -353,13 +343,13 @@ app.get('/dashboard' , CheckAuth , async(req,res)=>{
 })
 
 
-app.get('/secret'  ,  CheckAuth , async(req,res)=>{
-    const user = await User.findById(req.session.user_id)
+// app.get('/secret'  ,  CheckAuth , async(req,res)=>{
+//     const user = await User.findById(req.session.user_id)
   
-    const products = await Product.find({}).populate('owner')
+//     const products = await Product.find({}).populate('owner')
   
-    res.render('secret' , {user:user , products})
-})
+//     res.render('secret' , {user:user , products})
+// })
 app.get('/bid/:id' ,  CheckAuth ,  async(req,res)=>{
     const user = await User.findById(req.session.user_id)
   
