@@ -63,6 +63,7 @@ app.use((req,res,next)=>{
 
 const CheckAuth = (req, res, next) => {
     if (!req.session.user_id) {
+        req.flash("error", "Please Login to view the page");
         return res.redirect('/login')
     }
     next();
@@ -99,7 +100,8 @@ function checkFileType(file, callback, req, res) {
     if(mimetype && extname) {
         return callback(null, true);
     } else {
-        alert('only images')
+        //req.flash("error", "Please upload a image");
+        //alert('only images')
         callback("Error: Images only!");
     }
 }
@@ -156,10 +158,6 @@ app.post('/login', async (req, res) => {
     }
 })
 app.get('/newproduct' , CheckAuth , async(req,res)=>{
-    if(t !== "seller")
-    {  
-        res.redirect('/dashboard')
-    }
     
     const user = await User.findById(req.session.user_id)
     //console.log(i)
@@ -168,13 +166,6 @@ app.get('/newproduct' , CheckAuth , async(req,res)=>{
 
 app.post('/newproduct' ,upload.single('image'), CheckAuth , async(req,res)=>{
 
-    //console.log(req.session.user_id)
-    
-    if(t !== "seller")
-    {
-        alert("You are not a seller");
-        res.redirect('/dashboard')
-    }
     const user = await User.findById(req.session.user_id)
     console.log(i)
     var newProduct = { 
@@ -246,7 +237,7 @@ app.delete('/updatedetails/:id/:proid', CheckAuth ,  async (req, res) => {
     let comments = await Comment.find({ product : req.params.proid}).populate('ownedBy').populate('product')
     let product = await Product.findById(req.params.proid).populate('owner').populate('biders').populate('review').populate('commented');
     //console.log(com);
-    console.log(d2);
+    //console.log(d2);
     res.render('productdetails' ,{product , comments , user })
     
     //res.redirect(`/productdetails/${req.params.id}`);
@@ -331,7 +322,7 @@ app.put('/product/:id',  CheckAuth , async (req, res) =>{
             new: true
         });
         await product.save() ;
-        console.log(product);
+        //console.log(product);
         //product = await product.save();
         req.flash('success', ' Update successfully ');
         res.redirect('/dashboard');
@@ -352,14 +343,14 @@ app.get('/product/:id',  CheckAuth , async  (req, res) => {
     res.render('edit', {  product: product });
    
 });
-app.get('/home'  ,  CheckAuth , async(req,res)=>{
+app.get('/home'  , async(req,res)=>{
     const user = await User.findById(req.session.user_id)
   
     //const products = await Product.find({}).sort({"productname" : 1 }).populate('owner').populate('biders')
     //const products = await Product.find({}).sort({"baseprice" : -1 }).populate('owner').populate('biders') 
     const products = await Product.find({}).sort({"price" : -1 }).populate('owner').populate('biders')       //.sort({"productname" : 1 })
-  
-    res.render('home' , {user:user , products , flg : "1"})
+    //console.log(products);
+    res.render('home' , {user:user , products , flg : "1"  , f:"1"})
 })
 
 
@@ -367,14 +358,15 @@ app.get('/dashboard' , CheckAuth , async(req,res)=>{
     const user = await User.findById(req.session.user_id)
   
     const products = await Product.find({}).populate('owner').populate('biders')
-    console.log(t)
-    if(t === 'seller'){
-        res.render('seller-dashboard' , {user:user , products})
-    }
-    else
-    {
-        res.render('buyer-dashboard' , {user:user , products})
-    }
+    //console.log(t)
+    res.render('seller-dashboard' , {user:user , products})
+    // if(t === 'seller'){
+    //     res.render('seller-dashboard' , {user:user , products})
+    // }
+    // else
+    // {
+    //     res.render('buyer-dashboard' , {user:user , products})
+    // }
 
 })
 
@@ -418,17 +410,18 @@ app.get('/search', CheckAuth ,  async (req, res) =>{
 app.post('/search', CheckAuth ,  async (req, res) => {
     const user = await User.findById(req.session.user_id)
     const { search } = req.body;
-    console.log(search);
+    //console.log(search);
     let products ;
     let products1 ;
    
-    products = await Product.find( { productname: new RegExp(search, 'i') } ).populate('owner');
+    products = await Product.find( { productname: new RegExp(search, 'i') } ).populate('owner').populate('biders');
     //console.log(products);
        
-    products1  = await Product.find({ tag : new RegExp(search, 'i') }).populate('owner') ;   
+    products1  = await Product.find({ tag : new RegExp(search, 'i') }).populate('owner').populate('biders') ;   
     console.log(products);   
+    console.log(products1); 
    
-    res.render('home' , {user , products : products , products1 : products1 , flg : "0"})     //, products1 : products1 
+    res.render('home' , {user , products : products , products1 : products1 , flg : "0" , f:"0"})     //, products1 : products1 
 
 
 });
@@ -440,7 +433,7 @@ app.get('/sort', CheckAuth ,  async (req, res) =>{
 app.post('/sort', CheckAuth ,  async (req, res) => {
     const user = await User.findById(req.session.user_id)
     var products;
-    console.log(req.body.sort);
+    //console.log(req.body.sort);
     if(req.body.sort == "alpha")
     {
         products = await Product.find({}).sort({"productname" : 1 }).populate('owner').populate('biders')
@@ -457,8 +450,8 @@ app.post('/sort', CheckAuth ,  async (req, res) => {
     {
         products = await Product.find({}).populate('owner').populate('biders') 
     }
-    console.log(products);
-    res.render('home' , {user , products , flg : "1"}) 
+    //console.log(products);
+    res.render('home' , {user , products , flg : "1" ,f:"1"}) 
      //const products = await Product.find({}).sort({"productname" : 1 }).populate('owner').populate('biders')
     //const products = await Product.find({}).sort({"baseprice" : -1 }).populate('owner').populate('biders') 
     

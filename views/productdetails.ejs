@@ -200,21 +200,23 @@
         <% } %>  
     <% } %> 
     <div id = "contain-product">
-            <h1>Name : <%= product.productname %> </h1>
+            <h1 style="font-family: Copperplate, Copperplate Gothic Light, fantasy;">Name : <%= product.productname %> </h1>
             
             
-            <h3>Tag : <%= product.tag %> </h3>
-            <h3>Base Price :<%= product.baseprice %></h3>
-            <h3>Owner : <%= product.owner.username %> </h3>
+            <h3>Tag : <span style="color: #df019c;"><%= product.tag %></span> </h3>
+            <h3>Base Price :<span style="color: #df019c;">$<%= product.baseprice %></span></h3>
+            <h3>Owner : <span style="color: #df019c;"><%= product.owner.username %></span> </h3>
+            <h3>Auction Start Time : <span style="color: #df019c;"><%= product.start %></span> </h3>
+            <h3>Auction End Time :<span style="color: #df019c;"><%= product.end %></span></h3>
             <img src="data:image/<%= product.image.contentType %>;base64, 
             <%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image"> 
-            <h3>Description : <%= product.description %> </h3>
+            <h3>Description :<span style="color: #000000;font-weight: lighter;"><%= product.description %> </span> </h3>
 
            
             <% if(product.owner.username == user.username){ %> 
-                <h2>Auction History</h2>
+                <h2 style="font-family: Copperplate, Copperplate Gothic Light, fantasy;color: #f31658;" >Auction History</h2>
                 <% for(let i = 0 ;i<product.biders.length ; i++) { %>
-                <h3><%= product.biders[i].username %> : <%= product.price[i] %>  </h3> 
+                <h3><%= product.biders[i].username %> : $<%= product.price[i] %>  </h3> 
 
                 <% } %>
             <% } %> 
@@ -255,7 +257,7 @@
                 </div>
             <% } %> 
         <div id = "contain-comment">
-            <h1>Comments</h1>
+            <h1 style="font-family: Copperplate, Copperplate Gothic Light, fantasy;color: #f31658;" >Comments</h1>
             <% for(let i = 0 ;i<comments.length ; i++) { %>
                 <div id = "single-com">
                     <% if (comments[i].rating == 1) { %> 
@@ -272,7 +274,7 @@
                         
                         <h3>Comment :</h3> 
                         <p style="font-weight: light;"><%= comments[i].comment %></p> 
-                        <p>-<%= comments[i].ownedBy.username %> </p>
+                        <p style=" font-family: Brush Script MT, cursive;font-size: 30px;">-<%= comments[i].ownedBy.username %> </p>
                     
                         <% if (user.username === comments[i].ownedBy.username){ %> 
                             <form action="/updatedetails/<%= comments[i].id %>/<%= product._id %>?_method=DELETE" method="POST" >
@@ -283,12 +285,7 @@
                 </div>
             <% } %>
         </div>
-        <!-- <a href = "/login">Login</a>
-        <a href = "/register">Register</a>
-        <a href = "/newproduct">Add Product</a>
-        <a href = "/home">Home</a>
-        <a href = "/dashboard">Dashboard</a>
-        <a href = "/logout">Logout</a> -->
+       
         <%  list  = [] %>
 </body>
 </html>

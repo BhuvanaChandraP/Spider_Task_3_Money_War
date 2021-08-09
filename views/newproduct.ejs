@@ -6,22 +6,84 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Product</title>
 </head>
+<style>
+    body{
+        text-align: center;
+    }
+    input{
+            border-color: #ee4c7c;
+            width: 200px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+        input:hover{
+            border-color: #f31658;
+            width: 250px;
+        }
+        input:active{
+            border-color: #f31658;
+            width: 250px;
+        }
+        button{
+            padding: 7px;
+            border-color: #df019c;
+            color: hsl(342, 90%, 52%);
+            border-radius: 5px;
+            font-size: large;
+        }
+        select{
+            padding: 7px;
+            border-color: #df019c;
+            color: #f31658;
+            border-radius: 5px;
+            font-size: large;
+        }
+        button:hover{
+            padding: 12px;
+            background-color: black;
+            border-radius: 5px;
+
+        }
+        textarea{
+            border-color: #ee4c7c;
+            width: 250px;
+            height: 70px;
+            padding: 10px;
+            border-radius: 5px;
+            border-width: 2px;
+        }
+        #customFile{
+            padding: 7px;
+            border-color: #df019c;
+            color: #f31658;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+        textarea:hover{
+            border-color: #f31658;
+            width: 350px;
+        }
+        textarea:active{
+            border-color: #f31658;
+            width: 350px;
+        }
+</style>
 <body>
     <%- include('partials/navbar') %>
     <form action="/newproduct" method="POST" enctype="multipart/form-data">
         <div >
-            <label for="productname"> Product Name </label>
+            <label for="productname"> Product Name </label><br>
             <input  type="text" name="productname"  id="name" placeholder="Enter item name"  required />
                   
         </div>
         
         <div>
-            <label for="description">Description </label>
+            <label for="description">Description </label><br>
             <textarea name="description" id="description"  placeholder="Description" required   ></textarea>
  
         </div>
         <div >
-            <label for="tag"> Product Category </label>
+            <label for="tag"> Product Category </label><br>
             <select  id="productcategory" name="tag">
                
                 <option value="Statues"> Statues </option>
@@ -33,7 +95,7 @@
             </select>
         </div>
         <div >
-            <label for="baseprice"> Base Price</label>
+            <label for="baseprice"> Base Price</label><br>
             <input  type="number" name="baseprice"  id="baseprice" placeholder = "Base Price"  required />
                   
         </div>
@@ -48,12 +110,12 @@
         <div >
             
             
-                <label for="image"> Image </label>
+                <label for="image"> Image </label><br>
                 <input type="file" class="custom-file-input" id="customFile" name="image" required>
                
             
         </div>
-
+        <br>
         <button>Submit</button>
     </form>
 </body>

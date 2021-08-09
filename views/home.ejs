@@ -5,106 +5,259 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
+    <style>
+        body{
+            text-align: center;
+        }
+        #sort{
+            float: left;
+            padding-left: 400px;
+            /* margin-bottom: 50px; */
+            /* padding-bottom: 50px; */
+        }
+        #search2{
+            float: right;
+            padding-right: 300px;
+            /* width: 100px; */
+            /* margin-bottom: 50px; */
+            /* padding-bottom: 50px; */
+        }
+        select{
+            padding: 7px;
+            border-color: #df019c;
+            color: #f31658;
+            border-radius: 5px;
+            font-size: large;
+        }
+        #search1{
+            padding: 7px;
+            border-color: #df019c;
+            color: #f31658;
+            border-radius: 5px;
+            font-size: large;
+        }
+        #search1:hover{
+            background-color: black;
+        }
+        #search{
+            padding: 7px;
+            border-color: #df019c;
+            color: #f31658;
+            border-radius: 5px;
+            font-size: large;
+        }
+        #sort1{
+            padding: 7px;
+            border-color: #df019c;
+            color: #f31658;
+            border-radius: 5px;
+            font-size: large;
+        }
+        #sort1:hover{
+            background-color: black;
+        }
+        #details{
+            text-decoration: none;
+            padding: 7px;
+            border-color: #df019c;
+            color: hsl(342, 90%, 52%);
+            border-radius: 5px;
+            font-size: x-large;
+        }
+        #details:hover{
+            padding: 12px;
+            background-color: black;
+            border-radius: 5px;
+
+        }
+        #bid{
+            text-decoration: none;
+            padding: 7px;
+            border-color: #df019c;
+            color: hsl(342, 90%, 52%);
+            border-radius: 5px;
+            font-size: x-large;
+        }
+        #bid:hover{
+            padding: 12px;
+            background-color: black;
+            border-radius: 5px;
+
+        }
+        #pro{
+            /* border-bottom:solid 2px rgb(59, 59, 59) ; */
+            margin-bottom: 20px;
+            /* max-width: 500px; */
+            
+        }
+        #pro1{
+            border-bottom:solid 2px rgb(59, 59, 59) ;
+        }
+        @media(max-width: 950px) {
+            #search2{
+            float: right;
+            padding-right: 50px;
+            /* padding-left: 100px; */
+            /* padding-top: 20px; */
+            
+        }
+        #sort{
+            float: left;
+            padding-left: 100px;
+            padding-bottom: 30px;
+            
+        }
+        }
+        
+    </style>
 </head>
 <body>
     <%- include('partials/navbar') %>
-    <a href = "/login">Login</a>
-    <a href = "/register">Register</a>
-    <a href = "/newproduct">Add Product</a>
-    <a href = "/home">Home</a>
-    <a href = "/dashboard">Dashboard</a>
-    <a href = "/logout">Logout</a>
-    <form action="/sort" method="POST" >
-        <div >
-            <label for="sort"> Sort By </label>
-            <select  id="category" name="sort">
+    <% let tick  %> 
+    <% tick = 0 %> 
+   <div id = "sort">
+        <form action="/sort" method="POST" >
             
-                <option value="alpha"> Alphabetical Order </option>
-                <option value="baseprice"> Base Price </option>
-                <option value="bid"> Highest Bid </option>
+                <label for="sort"> Sort By : </label>
+                <select  id="category" name="sort">
                 
-            </select>
-        </div>
-        <button>Apply</button>
-    </form>
-    <form  action="/search" method="POST">
-        <!-- <div >
-            <label for="tag"> Product Category </label>
-            <select  id="productcategory" name="tag">
-               
-                <option value="Statues"> Statues </option>
-                <option value="Coins"> Coins </option>
-                <option value="Paintings"> Paintings </option>
-                <option value="Ornaments"> Ornaments </option>
-                <option value="Tools"> Tools </option>
-                <option value="Other Products"> Other products </option>
-            </select>
-        </div> -->
-        <!-- <div>
-            <label for="search"></label> -->
-            <input id="search" name="search"  type="search"  type="search" placeholder="Search products"  aria-label="Search" 
-                size="15" value="<%= typeof search != 'undefined' ? search : '' %>" />
-        <!-- </div>     -->
-        <button type="submit"> Search </button>
-    </form>
+                    <option value="alpha"> Alphabetical Order </option>
+                    <option value="baseprice"> Base Price </option>
+                    <option value="bid"> Highest Bid </option>
+                    
+                </select>
+            
+            &nbsp &nbsp &nbsp 
+            <button id = "sort1">Apply</button>
+        </form>
+    </div>
+    <div id = "search2">
+        <form  action="/search" method="POST">
+                <!-- <button type="submit" id = "search1"> Search </button> &nbsp &nbsp &nbsp  -->
+                <input id="search" name="search"  type="search"  type="search" placeholder="Search products"  aria-label="Search" 
+                    size="15" value="<%= typeof search != 'undefined' ? search : '' %>" />  &nbsp &nbsp &nbsp &nbsp 
+                <button type="submit" id = "search1" > Search </button>
+            <!-- </div>     -->
+           
+        </form>
+    </div>
+    <br><br><br><br> <br><br><br><br>
     
-    <% if(flg == "0") {%> 
-      
-        <% if(products1 !== []){ %> 
-    <% for(let product of products1 ) { %>
-        <% var deadlineDate = new Date(product.end) %> 
-        <% var startDate = new Date(product.start) %> 
-        <% var now = Date.now() %> 
-        
-        <h1>Name : <%= product.productname %> </h1>
-        <h3>Description : <%= product.description %> </h3>
-        <h3>Tag : <%= product.tag %> </h3>
-        <h3>Base Price :<%= product.baseprice %></h3>
-        <h3>Owner : <%= product.owner.username %> </h3>
-        <h3>Auction Start Time : <%= product.start %> </h3>
-        <h3>Auction End Time : <%= product.end %> </h3>
-        <% if(product.price.length !== 0) {%> 
-          <h3>Highest Bid : <%= product.price[product.price.length -1] %> &nbsp &nbsp &nbsp Bidder :<%= product.biders[product.biders.length -1].username %> </h3>
-        <% } %> 
-        <img src="data:image/<%= product.image.contentType %>;base64, 
-		<%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image"> 
-        <a href = "/productdetails/<%= product._id %>">Details</a>
+            
+                <% if(flg == "0") {%> 
+                
+                    <% if(products1.length !== 0){ %> 
+                            <% for(let product of products1 ) { %>
+                                <% var deadlineDate = new Date(product.end) %> 
+                                <% var startDate = new Date(product.start) %> 
+                                <% var now = Date.now() %> 
+                                <div id = "pro1">
+                                    <h1 style="font-family: Copperplate, Copperplate Gothic Light, fantasy;color: rgb(255, 1, 1);">Name : <%= product.productname %> </h1>
+                                    <!-- <h3>Description : <%= product.description %> </h3> -->
+                                    <h3>Tag : <span style="color: rgb(0, 155, 59);"><%= product.tag %> </span></h3>
+                                    <h3>Base Price :<span style="color: rgb(238, 1, 21);">$<%= product.baseprice %></span></h3>
+                                    <h3>Owner : <span style="color: rgb(67, 0, 192);"><%= product.owner.username %></span> </h3>
+                                    <h3>Auction Start Time :<span style="color: rgb(88, 88, 88);"><%= product.start %></span>  </h3>
+                                    <h3>Auction End Time : <span style="color: rgb(209, 153, 0);"><%= product.end %></span> </h3>
+                                    <% if(product.price.length !== 0) {%> 
+                                        <!-- <%= product.biders[product.biders.length -1].username %>
+                                        <%= product.biders[product.biders.length -1].username %> -->
+                                        <h3>Highest Bid : <span style="color: rgb(238, 1, 21);">$<%= product.price[product.price.length -1] %> </span>&nbsp &nbsp &nbsp Bidder :
+                                            <span style="color: rgb(67, 0, 192);"><%= product.biders[product.biders.length -1].username %></span> </h3>
+                                        <!-- <h3>Highest Bid : <%= product.price[product.price.length -1] %> &nbsp &nbsp &nbsp Bidder :<%= product.biders[product.price.length -1].username %> </h3> -->
+                                    <% } %> 
+                                    <br><a href = "/productdetails/<%= product._id %>" id = "details">Details</a><br>&nbsp &nbsp &nbsp 
+                                    <% if(deadlineDate >= now && startDate <= now ) {%> 
+                                        <% if( product.owner.username !== user.username){ %> 
+                                            <br><a href = "/bid/<%= product._id %>" id = "bid">Bid Here</a><br>
+                                        <% } %> 
+                                    <% } else{ %>
+                                        <h1 style="color: #f31616;">Sold For : $<%= product.price[product.price.length -1] %></h1> 
+                                    <% } %> 
+                                    <img src="data:image/<%= product.image.contentType %>;base64, 
+                                    <%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image"> <br><br><br><br>
+                                </div>
+                            
+                            <% } %>  
+                    <% }else { %>  
+                        <% if(tick != 1 ) {%>
+                            <% if(products.length === 0) {%>  
+                            <h1>Sorry No Products Found</h1>
+                            <% } %> 
+                        <% } %> 
+                            
+                            <% tick = 1 %> 
+                    <% } %> 
+                <% } %>  
        
-        <% if(deadlineDate >= now && startDate <= now) {%> 
-            <a href = "/bid/<%= product._id %>">Bid Here</a>
-        <% } %> 
-    <% } %>  
-    <% }else { %>  
-        <h1>Sorry No Products </h1>
-    <% } %> 
-    <% } %>  
-    <% if(products !== []){ %> 
-        
-        <% for(let product of products) { %>
-        <% var deadlineDate = new Date(product.end) %> 
-        <% var startDate = new Date(product.start) %> 
-        <% var now = Date.now() %> 
-        
-        <h1>Name : <%= product.productname %> </h1>
-        <h3>Description : <%= product.description %> </h3>
-        <h3>Tag : <%= product.tag %> </h3>
-        <h3>Base Price :<%= product.baseprice %></h3>
-        <h3>Owner : <%= product.owner.username %> </h3>
-        <h3>Auction Start Time : <%= product.start %> </h3>
-        <h3>Auction End Time : <%= product.end %> </h3>
-        <% if(product.price.length !== 0) {%> 
-          <h3>Highest Bid : <%= product.price[product.price.length -1] %> &nbsp &nbsp &nbsp Bidder :<%= product.biders[product.biders.length -1].username %> </h3>
-        <% } %> 
-        <img src="data:image/<%= product.image.contentType %>;base64, 
-		<%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image"> 
-        <a href = "/productdetails/<%= product._id %>">Details</a>
-       
-        <% if(deadlineDate >= now && startDate <= now) {%> 
-            <a href = "/bid/<%= product._id %>">Bid Here</a>
-        <% } %> 
-        <% } %>  
-        <% }else { %>  
-            <h1>Sorry No Products </h1>
-        <% } %>  
+            <% if(products.length !== 0){ %> 
+                
+                <% for(let product of products) { %>
+                        <% var deadlineDate = new Date(product.end) %> 
+                        <% var startDate = new Date(product.start) %> 
+                        <% var now = Date.now() %> 
+                        <div id = "pro">
+                        <h1 style="font-family: Copperplate, Copperplate Gothic Light, fantasy;color: rgb(255, 1, 1);">Name : <%= product.productname %> </h1>
+                        <!-- <h3>Description : <%= product.description %> </h3> -->
+                        <h3>Tag :  <span style="color: rgb(0, 155, 59);"><%= product.tag %> </span> </h3>
+                        <h3>Base Price :<span style="color: rgb(238, 1, 21);">$<%= product.baseprice %></span></h3>
+                        <h3>Owner : <span style="color: rgb(67, 0, 192);"><%= product.owner.username %> </span></h3>
+                        <h3>Auction Start Time : <span style="color: rgb(88, 88, 88);"><%= product.start %> </span></h3>
+                        <h3>Auction End Time : <span style="color: rgb(209, 153, 0);"><%= product.end %> </span></h3>
+                        <% if(product.price.length !== 0) {%> 
+                        <h3>Highest Bid : <span style="color: rgb(238, 1, 21);">$<%= product.price[product.price.length -1] %> </span>&nbsp &nbsp &nbsp Bidder :
+                            <span style="color: rgb(67, 0, 192);"><%= product.biders[product.biders.length -1].username %></span> </h3>
+                        <% } %> 
+                        <br><a href = "/productdetails/<%= product._id %>" id = "details" >Details</a> <br>&nbsp &nbsp &nbsp &nbsp
+                    
+                        <% if(deadlineDate >= now && startDate <= now) {%> 
+                        
+                            
+                            <% if( product.owner.username !== user.username){ %> 
+                                <br><a href = "/bid/<%= product._id %>" id = "bid">Bid Here</a><br>
+                            <% } %> 
+                        <% }else{ %>
+                            <h1 style="color: #f31616;">Sold For : $<%= product.price[product.price.length -1] %></h1>
+                        <% } %>
+                            <br>
+                            <img src="data:image/<%= product.image.contentType %>;base64, 
+                            <%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image"> 
+                        </div>
+                <% } %>  
+            <% }else { %>  
+                <% if(tick != 1) {%> 
+                    <% if(products.length === 0) {%>  
+                        <% if(f == "0"){ %> 
+                          <h1>Sorry No Products Found</h1>
+                        <% } %> 
+                    <% } %> 
+                   
+                <% } %> 
+            <% } %>  
+  
+            
+            <% if(f == "1"){ %> 
+                <h1 style="font-family: Copperplate, Copperplate Gothic Light, fantasy;color: rgb(255, 1, 1);">Name : Indian Gold Coin </h1>
+                <h3>Tag : <span style="color: rgb(0, 155, 59);">Coins</span></h3>
+                <h3>Base Price :<span style="color: rgb(238, 1, 21);">$10000</span></h3>
+                <h3>Owner : <span style="color: rgb(67, 0, 192);">Pankaj Tandon</span> </h3>
+                <h3>Auction Start Time :<span style="color: rgb(88, 88, 88);">Mon Aug 09 2021 16:00:00 GMT+0530 (India Standard Time)</span>  </h3>
+                <h3>Auction End Time : <span style="color: rgb(209, 153, 0);">Tue Aug 10 2021 16:00:00 GMT+0530 (India Standard Time)
+                </span> </h3>
+                <h1 style="color: #f31616;">Sold For :$100000</h1> 
+                <img src = "https://www.bu.edu/files/2016/04/kanishka_back_lg.jpg"
+                width="300" height="300" alt="Image"> <br><br><br><br>
+                <h1 style="font-family: Copperplate, Copperplate Gothic Light, fantasy;color: rgb(255, 1, 1);">Name :Protective Amulet </h1>
+                <h3>Tag : <span style="color: rgb(0, 155, 59);">Ornaments</span></h3>
+                <h3>Base Price :<span style="color: rgb(238, 1, 21);">$10000</span></h3>
+                <h3>Owner : <span style="color: rgb(67, 0, 192);">Alexander</span> </h3>
+                <h3>Auction Start Time :<span style="color: rgb(88, 88, 88);">Mon Aug 09 2021 16:00:00 GMT+0530 (India Standard Time)</span>  </h3>
+                <h3>Auction End Time : <span style="color: rgb(209, 153, 0);">Tue Aug 10 2021 16:00:00 GMT+0530 (India Standard Time)
+                </span> </h3>
+                <h1 style="color: #f31616;">Sold For :$1000000 </h1> 
+                <img src = "https://df2sm3urulav.cloudfront.net/tenants/gr/uploads/content/58a3d0305116d.jpg" 
+                    width="300" height="300" alt="Image"> 
+                 <br><br><br><br>
+            <% } %> 
 </body>
 </html>
