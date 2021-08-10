@@ -233,22 +233,19 @@ app.delete('/updatedetails/:id/:proid', CheckAuth ,  async (req, res) => {
     await d1.save() 
    
     const user = await User.findById(req.session.user_id)
-    // let product = await Product.find(req.params.id).populate('owner').populate('biders').populate('review').populate('commented');
+    
     let comments = await Comment.find({ product : req.params.proid}).populate('ownedBy').populate('product')
     let product = await Product.findById(req.params.proid).populate('owner').populate('biders').populate('review').populate('commented');
-    //console.log(com);
-    //console.log(d2);
+    
     res.render('productdetails' ,{product , comments , user })
     
-    //res.redirect(`/productdetails/${req.params.id}`);
+   
 });
 
 app.get('/productdetails/:id' , CheckAuth , async(req,res)=>{
     let product = await Product.findById(req.params.id).populate('owner').populate('biders').populate('review').populate('commented');
     let comments = await Comment.find({product : req.params.id}).populate('ownedBy').populate('product')
     const user = await User.findById(req.session.user_id)
-    //console.log(product);
-    //comments = Comment.find({});
     res.render('productdetails' ,{product ,comments ,user })
 })
 app.post('/productdetails/:id' , CheckAuth , async(req,res)=>{
@@ -260,12 +257,10 @@ app.post('/productdetails/:id' , CheckAuth , async(req,res)=>{
         new: true
     });
     update.save();
-    // comment1.save();
     let product = await Product.findById(req.params.id).populate('owner').populate('biders').populate('review').populate('commented');
     let comments = await Comment.find({product : req.params.id}).populate('ownedBy').populate('product')
     const user = await User.findById(req.session.user_id)
-    //comments = Comment.find({});
-    //res.send("able to add")
+    
     res.render('productdetails' ,{product , comments , user })
 })
 // app.delete('/productdetails/:id', CheckAuth ,  async (req, res) => {

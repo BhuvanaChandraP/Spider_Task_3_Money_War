@@ -115,6 +115,8 @@
     <%- include('partials/navbar') %>
     <% let tick  %> 
     <% tick = 0 %> 
+    <% let tick1  %> 
+    <% tick1 = 0 %> 
    <div id = "sort">
         <form action="/sort" method="POST" >
             
@@ -177,16 +179,17 @@
                                     <img src="data:image/<%= product.image.contentType %>;base64, 
                                     <%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image"> <br><br><br><br>
                                 </div>
-                            
+                                <% tick1 = 1 %> 
                             <% } %>  
                     <% }else { %>  
                         <% if(tick != 1 ) {%>
                             <% if(products.length === 0) {%>  
-                            <h1>Sorry No Products Found</h1>
+                               <h1>Sorry No Products Found</h1>
+                               <% tick = 1 %> 
                             <% } %> 
                         <% } %> 
                             
-                            <% tick = 1 %> 
+                            
                     <% } %> 
                 <% } %>  
        
@@ -225,7 +228,7 @@
                         </div>
                 <% } %>  
             <% }else { %>  
-                <% if(tick != 1) {%> 
+                <% if(tick != 1 && tick1 != 1) {%> 
                     <% if(products.length === 0) {%>  
                         <% if(f == "0"){ %> 
                           <h1>Sorry No Products Found</h1>
