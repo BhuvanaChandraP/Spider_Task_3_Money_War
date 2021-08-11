@@ -10,42 +10,28 @@
            padding: 0;
            margin: 0;
         } 
-        /* .float-container {
-            border: 3px solid #fff;
-            padding: 20px;
-        }
-
-        .float-child {
-            width: 40%;
-            float: left;
-            padding: 20px;
-            border: 2px solid red;
-        }   */
+        
         #up{
+            position: absolute;
             margin-left: 200px;
             max-width: 500px;
-            float: left;
+            /* float: left; */
             /* padding-left: 50px; */
             padding-right: 150px;
-            /* display: inline-block; */
+           
         }
         #down{
 
-            /* border:solid 2px rgb(219, 19, 19); */
+            position: absolute;
+            top: 50px;
+            right: 100px;
             max-width: fit-content;
             padding-bottom: 20px;
-            padding-left: 150px;
+            padding-left: 20px;
             max-width: 500px;
-            /* padding-right: 50px; */
-            /* border-radius: 5px; */
-            /* margin: auto; */
-            /* margin-top: 10px; */
-            margin-right: 200px;
-            float:right;
-            /* position: absolute; */
-            /* float: right; */
-            /* display: inline-block;
-            margin-top: 10px; */
+           
+            margin-right: 50px;
+            /* float:right; */
             
         }
         button{
@@ -74,16 +60,25 @@
             padding: 12px;
             background-color: black;
         }
+        @media(max-width: 1150px) {
+            #down{
+                position: relative;
+                margin-left: 150px;
+            }
+            #up{
+                position: relative;
+                margin-left: 100px;
+
+            }
+           
+            
+        }
     </style>
 </head>
 <body>
     <%- include('partials/navbar') %>
     
-    <!-- <a href = "/login">Login</a>
-    <a href = "/register">Register</a>
-    <a href = "/newproduct">Add Product</a>
-    <a href = "/home">Home</a>
-    <a href = "/logout">Logout</a> -->
+    
     <div class = "float-container" >
         <div id = "up" class="float-child">
             <h1 style="font-family: Copperplate, Copperplate Gothic Light, fantasy;color: #f31658;" >Your products</h1>

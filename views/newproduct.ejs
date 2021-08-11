@@ -96,27 +96,72 @@
         </div>
         <div >
             <label for="baseprice"> Base Price</label><br>
-            <input  type="number" name="baseprice"  id="baseprice" placeholder = "Base Price"  required />
+            <input  type="number" name="baseprice"  id="baseprice" placeholder = "Base Price"  required  min = "0"/>
                   
         </div>
+        <% let d = new Date()%>
+        <% let n = d.toISOString()%>
+        <% n= n.slice(0,-8)%>
         <div>
             <label  for="start">Auction Start Time :</label><br>
-            <input type="datetime-local" name="start" id="start" placeholder="Auction Start Time" required>
+            <input type="datetime-local" name="start" id="start" placeholder="Auction Start Time" onchange="return dateValidation1()" min=<%=n%> required>
         </div>
         <div>
             <label  for="end">Auction End Time :</label><br>
-            <input type="datetime-local" name="end" id="end" placeholder="Auction End Time" required>
+            <input type="datetime-local" name="end" id="end" placeholder="Auction End Time" onchange="return dateValidation()" min=<%=n%> required>
         </div>
         <div >
             
             
                 <label for="image"> Image </label><br>
-                <input type="file" class="custom-file-input" id="customFile" name="image" required>
+                <input type="file"  id="customFile" name="image" onchange="return fileValidation()" required>
                
             
         </div>
         <br>
         <button>Submit</button>
     </form>
+
+    <script>
+        function fileValidation() {
+            let file = document.getElementById('customFile');
+            let filePath = file.value;
+            if(filePath!=''){
+            let allowedExtensions = /(\.jpg|\.jpeg|\.png|\.gif)$/i;
+            if (!allowedExtensions.exec(filePath)) {
+                alert('Invalid file type! Only files with .jpg, .jpeg, .png or .gif are allowed');
+                file.value = '';
+                return false;
+            } 
+          }
+                  
+        }
+        function dateValidation(){
+            let deadline = document.getElementById('end');
+            let deadlineDate = deadline.value;
+            if(deadlineDate!=''){
+                let now = Date.now();
+                let deadlineFormat = new Date(deadlineDate);
+            if(deadlineFormat<now){
+                alert('Please enter a future time to end the auction');
+                deadline.value='';
+                return false;
+            }
+            }
+        }
+        function dateValidation1(){
+            let start = document.getElementById('start');
+            let startDate = start.value;
+            if(startDate!=''){
+                let now = Date.now();
+                let startFormat = new Date(startDate);
+            if(startFormat<now){
+                alert('Please enter a future time to start the auction');
+                start.value='';
+                return false;
+            }
+            }
+        }
+    </script>
 </body>
 </html>

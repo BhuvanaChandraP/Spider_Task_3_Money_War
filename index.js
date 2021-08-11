@@ -108,7 +108,7 @@ function checkFileType(file, callback, req, res) {
 
 
 app.get('/', (req, res) => {
-    res.send('THIS IS THE HOME PAGE')
+    res.redirect('/home');
 })
 
 app.get('/register', (req, res) => {
@@ -263,6 +263,147 @@ app.post('/productdetails/:id' , CheckAuth , async(req,res)=>{
     
     res.render('productdetails' ,{product , comments , user })
 })
+
+
+app.put('/product/:id',  CheckAuth , async (req, res) =>{
+    let product = await Product.findById(req.params.id);
+    let description1= { description : req.body.description}
+    let baseprice1 = {baseprice : req.body.baseprice};
+    let  tag1 = {tag:req.body.tag};
+   
+    try {
+        product = await Product.findOneAndUpdate( {_id : req.params.id} , tag1 , {
+            new: true
+        });
+        await product.save() ;
+        product = await Product.findOneAndUpdate( {_id : req.params.id} , description1 , {
+            new: true
+        });
+        await product.save() ;
+        product = await Product.findOneAndUpdate( {_id : req.params.id} , baseprice1, {
+            new: true
+        });
+        await product.save() ;
+        req.flash('success', ' Update successfully ');
+        res.redirect('/dashboard');
+    }
+    catch (err) {
+        console.log(err);
+        req.flash('error_msg', 'Please fill all the details!');
+        res.render('edit', { product: product });  
+    }
+});
+app.delete('/product/:id',  CheckAuth , async (req, res) => {
+    await Product.findByIdAndDelete(req.params.id);
+    req.flash('error', 'The product has been removed');
+    res.redirect('/dashboard');
+});
+app.get('/product/:id',  CheckAuth , async  (req, res) => {
+    const product = await Product.findById(req.params.id);
+    res.render('edit', {  product: product });
+   
+});
+app.get('/home'  , async(req,res)=>{
+    const user = await User.findById(req.session.user_id) 
+    const products = await Product.find({}).sort({"price" : -1 }).populate('owner').populate('biders')       
+    res.render('home' , {user:user , products , flg : "1"  , f:"1"})
+})
+
+
+app.get('/dashboard' , CheckAuth , async(req,res)=>{
+    const user = await User.findById(req.session.user_id)
+    const products = await Product.find({}).populate('owner').populate('biders')
+    res.render('seller-dashboard' , {user:user , products})
+   
+
+})
+
+
+
+app.get('/bid/:id' ,  CheckAuth ,  async(req,res)=>{
+    const user = await User.findById(req.session.user_id)
+  
+    const products = await Product.findById(req.params.id).populate('owner')
+  
+    res.render('bid' ,{user:user , products})
+})
+app.post('/bid/:id' ,  CheckAuth ,  async(req,res)=>{
+    let filter1 = {_id:req.params.id }
+    const d1 = await Product.findOneAndUpdate( filter1 , { $push: {biders : i} }, {
+        new: true
+    });
+    await d1.save()  
+   
+    const d2 = await Product.findOneAndUpdate( filter1 , { $push : {price:req.body.price} }, { new : true });
+        
+    await d2.save()  
+    const user = await User.findById(req.session.user_id)
+  
+    const products = await Product.findById(req.params.id).populate('owner')
+    console.log(products);
+    res.redirect('/home')
+})
+app.get('/search', CheckAuth ,  async (req, res) =>{
+    res.redirect('/home');
+});
+
+
+app.post('/search', CheckAuth ,  async (req, res) => {
+    const user = await User.findById(req.session.user_id)
+    const { search } = req.body;
+    let products ;
+    let products1 ;
+   
+    products = await Product.find( { productname: new RegExp(search, 'i') } ).populate('owner').populate('biders')
+       
+    products1  = await Product.find({ tag : new RegExp(search, 'i') }).populate('owner').populate('biders') ;   
+    console.log(products);   
+    console.log(products1); 
+   
+    res.render('home' , {user , products : products , products1 : products1 , flg : "0" , f:"0"})     
+
+
+});
+app.get('/sort', CheckAuth ,  async (req, res) =>{
+    res.redirect('/home');
+});
+
+
+app.post('/sort', CheckAuth ,  async (req, res) => {
+    const user = await User.findById(req.session.user_id)
+    var products;
+    if(req.body.sort == "alpha")
+    {
+        products = await Product.find({}).sort({"productname" : 1 }).populate('owner').populate('biders')
+    }
+    else if (req.body.sort == "baseprice")
+    {
+        products = await Product.find({}).sort({"baseprice" : -1 }).populate('owner').populate('biders') 
+    }
+    else if (req.body.sort == "bid")
+    {
+        products = await Product.find({}).sort({"price" : -1 }).populate('owner').populate('biders') 
+    }
+    else
+    {
+        products = await Product.find({}).populate('owner').populate('biders') 
+    }
+    res.render('home' , {user , products , flg : "1" ,f:"1"}) 
+    
+
+
+});
+app.get('/logout',(req,res)=>{
+    req.flash('success',"Successfully Logged Out");
+    res.redirect('/login');
+})
+
+app.listen(8080, () => {
+    console.log("Serving on port 8080")
+})
+
+
+
 // app.delete('/productdetails/:id', CheckAuth ,  async (req, res) => {
 //     const com = await Comment.findOneAndDelete({product : req.params.id});
 //     const d1 = await Product.findOneAndUpdate( {_id : req.params.id} , { $pull: {commented : i} }, {
@@ -298,180 +439,3 @@ app.post('/productdetails/:id' , CheckAuth , async(req,res)=>{
 //     await comment2.save() ;
 //     res.redirect(`/productdetails/${req.params.id}`);
 // });
-app.put('/product/:id',  CheckAuth , async (req, res) =>{
-    let product = await Product.findById(req.params.id);
-    let description1= { description : req.body.description}
-    let baseprice1 = {baseprice : req.body.baseprice};
-    let  tag1 = {tag:req.body.tag};
-   
-    try {
-        product = await Product.findOneAndUpdate( {_id : req.params.id} , tag1 , {
-            new: true
-        });
-        await product.save() ;
-        product = await Product.findOneAndUpdate( {_id : req.params.id} , description1 , {
-            new: true
-        });
-        await product.save() ;
-        product = await Product.findOneAndUpdate( {_id : req.params.id} , baseprice1, {
-            new: true
-        });
-        await product.save() ;
-        //console.log(product);
-        //product = await product.save();
-        req.flash('success', ' Update successfully ');
-        res.redirect('/dashboard');
-    }
-    catch (err) {
-        console.log(err);
-        req.flash('error_msg', 'Please fill all the details!');
-        res.render('edit', { product: product });  
-    }
-});
-app.delete('/product/:id',  CheckAuth , async (req, res) => {
-    await Product.findByIdAndDelete(req.params.id);
-    req.flash('error', 'The product has been removed');
-    res.redirect('/dashboard');
-});
-app.get('/product/:id',  CheckAuth , async  (req, res) => {
-    const product = await Product.findById(req.params.id);
-    res.render('edit', {  product: product });
-   
-});
-app.get('/home'  , async(req,res)=>{
-    const user = await User.findById(req.session.user_id)
-  
-    //const products = await Product.find({}).sort({"productname" : 1 }).populate('owner').populate('biders')
-    //const products = await Product.find({}).sort({"baseprice" : -1 }).populate('owner').populate('biders') 
-    const products = await Product.find({}).sort({"price" : -1 }).populate('owner').populate('biders')       //.sort({"productname" : 1 })
-    //console.log(products);
-    res.render('home' , {user:user , products , flg : "1"  , f:"1"})
-})
-
-
-app.get('/dashboard' , CheckAuth , async(req,res)=>{
-    const user = await User.findById(req.session.user_id)
-  
-    const products = await Product.find({}).populate('owner').populate('biders')
-    //console.log(t)
-    res.render('seller-dashboard' , {user:user , products})
-    // if(t === 'seller'){
-    //     res.render('seller-dashboard' , {user:user , products})
-    // }
-    // else
-    // {
-    //     res.render('buyer-dashboard' , {user:user , products})
-    // }
-
-})
-
-
-// app.get('/secret'  ,  CheckAuth , async(req,res)=>{
-//     const user = await User.findById(req.session.user_id)
-  
-//     const products = await Product.find({}).populate('owner')
-  
-//     res.render('secret' , {user:user , products})
-// })
-app.get('/bid/:id' ,  CheckAuth ,  async(req,res)=>{
-    const user = await User.findById(req.session.user_id)
-  
-    const products = await Product.findById(req.params.id).populate('owner')
-  
-    res.render('bid' ,{user:user , products})
-})
-app.post('/bid/:id' ,  CheckAuth ,  async(req,res)=>{
-    let filter1 = {_id:req.params.id }
-    const d1 = await Product.findOneAndUpdate( filter1 , { $push: {biders : i} }, {
-        new: true
-    });
-    await d1.save()  
-   
-    const d2 = await Product.findOneAndUpdate( filter1 , { $push : {price:req.body.price} }, { new : true });
-        
-    await d2.save()  
-    const user = await User.findById(req.session.user_id)
-  
-    const products = await Product.findById(req.params.id).populate('owner')
-    console.log(products);
-    res.redirect('/home')
-    //res.render('bid' ,{user:user , products})
-})
-app.get('/search', CheckAuth ,  async (req, res) =>{
-    res.redirect('/home');
-});
-
-//Case insensitive search using regular expression
-app.post('/search', CheckAuth ,  async (req, res) => {
-    const user = await User.findById(req.session.user_id)
-    const { search } = req.body;
-    //console.log(search);
-    let products ;
-    let products1 ;
-   
-    products = await Product.find( { productname: new RegExp(search, 'i') } ).populate('owner').populate('biders');
-    //console.log(products);
-       
-    products1  = await Product.find({ tag : new RegExp(search, 'i') }).populate('owner').populate('biders') ;   
-    console.log(products);   
-    console.log(products1); 
-   
-    res.render('home' , {user , products : products , products1 : products1 , flg : "0" , f:"0"})     //, products1 : products1 
-
-
-});
-app.get('/sort', CheckAuth ,  async (req, res) =>{
-    res.redirect('/home');
-});
-
-//Case insensitive search using regular expression
-app.post('/sort', CheckAuth ,  async (req, res) => {
-    const user = await User.findById(req.session.user_id)
-    var products;
-    //console.log(req.body.sort);
-    if(req.body.sort == "alpha")
-    {
-        products = await Product.find({}).sort({"productname" : 1 }).populate('owner').populate('biders')
-    }
-    else if (req.body.sort == "baseprice")
-    {
-        products = await Product.find({}).sort({"baseprice" : -1 }).populate('owner').populate('biders') 
-    }
-    else if (req.body.sort == "bid")
-    {
-        products = await Product.find({}).sort({"price" : -1 }).populate('owner').populate('biders') 
-    }
-    else
-    {
-        products = await Product.find({}).populate('owner').populate('biders') 
-    }
-    //console.log(products);
-    res.render('home' , {user , products , flg : "1" ,f:"1"}) 
-     //const products = await Product.find({}).sort({"productname" : 1 }).populate('owner').populate('biders')
-    //const products = await Product.find({}).sort({"baseprice" : -1 }).populate('owner').populate('biders') 
-    
-
-    // const { search } = req.body;
-    // console.log(search);
-    // let products ;
-    // let products1 ;
-   
-    // products = await Product.find( { productname: new RegExp(search, 'i') } ).populate('owner');
-    // //console.log(products);
-       
-    // products1  = await Product.find({ tag : new RegExp(search, 'i') }).populate('owner') ;   
-    // console.log(products);   
-   
-        //, products1 : products1 
-
-
-});
-app.get('/logout',(req,res)=>{
-    //req.logout();
-    req.flash('success',"Successfully Logged Out");
-    res.redirect('/login');
-})
-
-app.listen(8080, () => {
-    console.log("Serving on port 8080")
-})
