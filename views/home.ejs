@@ -9,6 +9,29 @@
         body{
             text-align: center;
         }
+        /* img{
+            float: top;
+           
+            display: flex;
+             
+            flex-direction: row;
+        } */
+        #pro{
+            /* max-width: 500px; */
+            margin-bottom: 20px;
+            /* border-bottom:solid 2px rgb(59, 59, 59) ; */
+            
+        }
+        #pro1{
+            border-bottom:solid 2px rgb(59, 59, 59) ;
+        }
+        #forborder{
+            margin: auto;
+            margin-top: 20px;
+            max-width: 500px;
+            border-bottom:solid 2px rgb(59, 59, 59) ;
+        }
+        
         #sort{
             float: left;
             padding-left: 300px;
@@ -80,14 +103,7 @@
             border-radius: 5px;
 
         }
-        #pro{
-            
-            margin-bottom: 20px;
-            
-        }
-        #pro1{
-            border-bottom:solid 2px rgb(59, 59, 59) ;
-        }
+       
         @media(max-width: 1330px) {
             #search2{
             float: right;
@@ -151,6 +167,7 @@
            
         </form>
     </div>
+    
     <br><br><br><br> <br><br><br><br>
     
             
@@ -195,10 +212,12 @@
                                         <% } %> 
                                     <% } %> 
                                     <img src="data:image/<%= product.image.contentType %>;base64, 
-                                    <%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image"> <br><br><br><br>
+                                    <%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image" class = "ig"> <br><br><br><br>
+                                    <div id = "forborder"></div>
                                 </div>
                                 <% tick1 = 1 %> 
                             <% } %>  
+                           
                     <% }else { %>  
                         <% if(tick != 1 ) {%>
                             <% if(products.length === 0) {%>  
@@ -249,9 +268,11 @@
                         <% } %>
                             <br>
                             <img src="data:image/<%= product.image.contentType %>;base64, 
-                            <%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image"> 
+                            <%= product.image.data.toString('base64') %>" width="300" height="300" alt="Image" class = "ig" > 
+                            <div id = "forborder"></div>
                         </div>
                 <% } %>  
+               
             <% }else { %>  
                 <% if(tick != 1 && tick1 != 1) {%> 
                     <% if(products.length === 0) {%>  
@@ -274,7 +295,8 @@
                 </span> </h3>
                 <h1 style="color: #f31616;">Sold For :$100000</h1> 
                 <img src = "https://www.bu.edu/files/2016/04/kanishka_back_lg.jpg"
-                width="300" height="300" alt="Image"> <br><br><br><br>
+                width="300" height="300" alt="Image" class = "ig" > <br><br><br><br>
+                <div id = "forborder"></div>
                 <h1 style="font-family: Copperplate, Copperplate Gothic Light, fantasy;color: rgb(255, 1, 1);">Name :Protective Amulet </h1>
                 <h3>Tag : <span style="color: rgb(0, 155, 59);">Ornaments</span></h3>
                 <h3>Base Price :<span style="color: rgb(238, 1, 21);">$10000</span></h3>
@@ -284,7 +306,7 @@
                 </span> </h3>
                 <h1 style="color: #f31616;">Sold For :$1000000 </h1> 
                 <img src = "https://df2sm3urulav.cloudfront.net/tenants/gr/uploads/content/58a3d0305116d.jpg" 
-                    width="300" height="300" alt="Image"> 
+                    width="300" height="300" alt="Image" class = "ig"> 
                  <br><br><br><br>
             <% } %> 
 </body>

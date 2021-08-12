@@ -55,6 +55,17 @@
             font-size: large; 
             text-decoration: none;
             border:solid 2px #df019c;
+           
+        }
+        #some{
+            padding-bottom: 20px;
+            border-bottom:solid 2px #030303;
+        }
+        #forborder{
+           
+            padding-bottom: 20px;
+            border-bottom:solid 2px #030303;
+        
         }
         #some a:hover{
             padding: 12px;
@@ -113,6 +124,7 @@
                     <% for(let i =0;i<product.biders.length;i++){ %> 
                         <%if(product.biders[i].username == user.username) { %>  
                                 <% if(flg === 0){ %> 
+                                    <div id = "forborder">
                                     <h1>Name : <%= product.productname %> </h1>
                                     <h3>Description : <%= product.description %> </h3>
                                     <h3>Tag : <%= product.tag %> </h3>
@@ -124,9 +136,11 @@
                                 <% } %> 
                                 $<%= product.price[i] %> <br>
                                 <% flg = 1 %> 
+                           
                         <% } %> 
                     <% } %> 
                     <% flg = 0 %> 
+                </div>
                 <% } %> 
         </div>
     </div>
