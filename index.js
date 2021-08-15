@@ -374,7 +374,7 @@ app.post('/sort', CheckAuth ,  async (req, res) => {
     var products;
     if(req.body.sort == "alpha")
     {
-        products = await Product.find({}).sort({"productname" : 1 }).populate('owner').populate('biders')
+        products = await Product.find({}).collation({locale:'en',strength:2}).sort({"productname" : 1 }).populate('owner').populate('biders')
     }
     else if (req.body.sort == "baseprice")
     {
